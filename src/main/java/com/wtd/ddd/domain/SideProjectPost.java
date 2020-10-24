@@ -1,16 +1,19 @@
 package com.wtd.ddd.domain;
 
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+@Data
+public class SideProjectPost {
 
-@NoArgsConstructor
-@Entity
-public class SideProjectPosts {
+    String title;
+    String contents;
 
-    @Id
-    @GeneratedValue()
-    private Long id;
+    @Override
+    public String toString() {
+        return "SideProjectPost{" +
+                "title='" + title + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
+    }
+
 }
