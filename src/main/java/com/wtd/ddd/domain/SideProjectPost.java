@@ -5,8 +5,9 @@ import lombok.Data;
 @Data
 public class SideProjectPost {
 
-    String title;
-    String contents;
+    private int seq;
+    private String title;
+    private String contents;
 
     @Override
     public String toString() {
