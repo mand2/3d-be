@@ -1,6 +1,4 @@
--- 공용 테이블 (회원) 생성
-
-
+-- 공용 테이블 (회원) 생성 (TODO)
 
 -- 사이드 프로젝트 테이블 생성
 CREATE TABLE SIDE_PROJECT_POST (
