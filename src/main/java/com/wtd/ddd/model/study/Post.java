@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import static java.time.LocalDateTime.now;
@@ -46,10 +47,10 @@ public class Post {
         this.content = content;
         this.writer = writer;
         this.memberNumber = memberNumber;
-        this.statusSeq = defaultIfNull(statusSeq, Id.of(StudyCode.class, StatusUtils.OPEN.getCodeSeq()));
+        this.statusSeq = statusSeq;
         this.placeSeq = placeSeq;
         this.subject = subject;
-        this.createdAt = defaultIfNull(createdAt, now());
+        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deleteFlag = deleteFlag;
     }
@@ -63,9 +64,8 @@ public class Post {
         this.subject = subject;
     }
 
-    //String으로 받아온 코드를 Id 형태로 바꿔야 함.
-    public void modify(String statusSeq) {
-        this.statusSeq = Id.of(StudyCode.class, statusSeq);
+    public void modify(Id<StudyCode, String> statusSeq) {
+        this.statusSeq = statusSeq;
     }
 
     public Long getSeq() {
@@ -154,6 +154,8 @@ public class Post {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private boolean deleteFlag;
+        private Apply apply;
+
 
         public Builder() {
         }

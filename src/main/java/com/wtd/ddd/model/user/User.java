@@ -15,8 +15,8 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
  */
 public class User {
     private final Long seq;
-    private final String name; //FIXME nickname 일수도.
-    private final Email email;
+    private String name; //github nickname. => 고칠 수 있다.
+    private Email email; //github email. => 고칠 수 있다.
     private LocalDateTime createdAt;
     private LocalDateTime lastLoginAt;
     private int loginCount;

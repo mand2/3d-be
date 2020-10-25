@@ -23,8 +23,9 @@ public class Apply {
     private Id<StudyCode, String> applyStatus;
     private LocalDateTime createdAt;
 
-    public Apply(Long postSeq, Id<User, Long> applyUser, String content) {
-        this(null, postSeq, applyUser, content, null, null);
+    public Apply(Long seq, Long postSeq, Id<User, Long> applyUser,
+                 Id<StudyCode, String> applyStatus, LocalDateTime createdAt) {
+        this(seq, postSeq, applyUser, null, applyStatus, createdAt);
     }
 
     public Apply(Long seq, Long postSeq, Id<User, Long> applyUser, String content, Id<StudyCode, String> applyStatus, LocalDateTime createdAt) {
@@ -36,8 +37,12 @@ public class Apply {
         this.createdAt = defaultIfNull(createdAt, now());
     }
 
-    public void modify(String applyStatus) {
-        this.applyStatus = Id.of(StudyCode.class, applyStatus);
+    public void modify(String content) {
+        this.content = content;
+    }
+
+    public void modify(Id<StudyCode, String> applyStatus) {
+        this.applyStatus = applyStatus;
     }
 
     public Long getSeq() {

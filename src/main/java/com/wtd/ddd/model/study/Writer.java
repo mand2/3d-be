@@ -11,7 +11,7 @@ import java.util.Objects;
  * Created By mand2 on 2020-10-24.
  */
 public class Writer {
-    private final Id<User, Long> userId;
+    private final Id<User, Long> userId; //user_seq 값임.
     private final String name;
 
     public Writer(Id<User, Long> userId, String name) {

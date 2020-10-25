@@ -17,3 +17,12 @@ spring:
       pool-name: H2_DB
 server:
   port: 8080
+
+
+3ddd:
+  mail:
+    address: 3ddd.developers@gmail.com
+    password: 3ddd_admin
+
+
+

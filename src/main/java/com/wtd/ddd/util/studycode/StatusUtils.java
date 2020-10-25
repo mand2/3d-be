@@ -11,7 +11,7 @@ public enum StatusUtils {
     WAITING("SS", "", "SS10", "대기중", true),
     ACCEPTED("SS", "", "SS20", "참여", true),
     DENIED("SS", "", "SS30", "거절됨", true),
-    CANCLE("SS", "", "SS30", "지원취소", true),
+    CANCEL("SS", "", "SS30", "지원취소", true),
     OPEN("SS", "", "SSP1", "모집중", true),
     CLOSE("SS", "", "SSP2","모집완료", true);
 
