@@ -1,8 +1,11 @@
 package com.wtd.ddd.controller;
 
 import com.google.gson.Gson;
-import com.wtd.ddd.domain.SideProjectDAO;
+import com.wtd.ddd.domain.SideProjectRecArea;
+import com.wtd.ddd.repository.SideProjectPostDAO;
 import com.wtd.ddd.domain.SideProjectPost;
+import com.wtd.ddd.repository.SideProjectRecAreaDAO;
+import com.wtd.ddd.service.SideProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,21 +19,37 @@ import java.util.List;
 public class SideProjectController {
 
     @Autowired
-    private SideProjectDAO sideProjectDAO;
+    private SideProjectPostDAO sideProjectPostDAO;
+
+    @Autowired
+    private SideProjectRecAreaDAO sideProjectRecAreaDAO;
+
+    @Autowired
+    private SideProjectService sideProjectService;
 
     @PostMapping("/post")
-    public String add(@RequestBody SideProjectPost post) {
-        log.error(post.toString());
-        sideProjectDAO.insert(post);
+    public String add(@RequestBody SideProjectPostRequest request) {
+        // TODO : 인원수 validation, 코드 정리
+        log.error("INPUT:" + request.toString());
+        SideProjectPost post = SideProjectPostRequest.convertToPost(request);
+        int key = sideProjectPostDAO.insert(post);
+        List<SideProjectRecArea> areas = SideProjectPostRequest.convertToRecArea(request, key);
+        sideProjectService.addRecAreas(areas);
         return "SUCCESS";
     }
 
      @GetMapping("/posts/{seq}")
      @ResponseBody
      public String get(@PathVariable int seq) {
-        log.error("seq= " + seq);
-        List<SideProjectPost> posts = sideProjectDAO.select(seq);
+        List<SideProjectPost> posts = sideProjectPostDAO.select(seq);
         return new Gson().toJson(posts);
      }
+
+    @GetMapping("/recs/")
+    @ResponseBody
+    public String get() {
+        List<SideProjectRecArea> areas = sideProjectRecAreaDAO.select();
+        return new Gson().toJson(areas);
+    }
 
 }
