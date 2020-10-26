@@ -39,6 +39,12 @@ public class Post {
                 null, placeSeq, subject, null, null, false);
     }
 
+    public Post(Long seq, String title, String content, Writer writer,
+                int memberNumber, Id<StudyCode, String> placeSeq, String subject) {
+        this(seq, title, content, writer, memberNumber,
+                null, placeSeq, subject, null, null, false);
+    }
+
     public Post(Long seq, String title, String content, Writer writer, int memberNumber,
                 Id<StudyCode, String> statusSeq, Id<StudyCode, String> placeSeq, String subject,
                 LocalDateTime createdAt, LocalDateTime updatedAt, boolean deleteFlag) {
@@ -47,10 +53,10 @@ public class Post {
         this.content = content;
         this.writer = writer;
         this.memberNumber = memberNumber;
-        this.statusSeq = statusSeq;
+        this.statusSeq = defaultIfNull(statusSeq, Id.of(StudyCode.class, StatusUtils.OPEN.getCodeSeq()));
         this.placeSeq = placeSeq;
         this.subject = subject;
-        this.createdAt = createdAt;
+        this.createdAt = defaultIfNull(createdAt, now());
         this.updatedAt = updatedAt;
         this.deleteFlag = deleteFlag;
     }

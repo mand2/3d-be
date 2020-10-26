@@ -12,17 +12,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Data
 public class Pageable {
-    private Integer offset = 0;
-    private Integer limit = 10;
+    private Long offset = 0L;
+    private Integer limit = 20;
 
-    public void offset() {
+    public Long offset() {
         validation();
         this.offset = offset * limit;
+        return this.offset;
+    }
+
+    public int limit() {
+        return this.limit;
     }
 
     private void validation() {
-        if (offset == null) this.offset = 0;
-        if (limit == null) this.limit = 10;
+        if (offset == null) this.offset = 0L;
+        if (limit == null) this.limit = 20;
     }
 
 }

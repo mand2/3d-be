@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 import static com.wtd.ddd.util.DateTimeUtils.dateTimeOf;
 
@@ -68,7 +69,7 @@ public class ApplyRepositoryImpl implements ApplyRepository {
     @Override
     public List<Apply> findAll(Id<User, Long> userId) {
         String query = "SELECT " +
-                "    SEQ as apply_seq, " +
+                "    SEQ as seq, " +
                 "    APPLY_USER as apply_user, " +
                 "    APPLY_STATUS as apply_status " +
                 "from STUDY_APPLIES " +
@@ -81,13 +82,29 @@ public class ApplyRepositoryImpl implements ApplyRepository {
     @Override
     public List<Apply> findByPostId(Id<Post, Long> postId) {
         String query = "SELECT " +
-                "    SEQ as apply_seq, " +
+                "    SEQ as seq, " +
                 "    APPLY_USER as apply_user, " +
                 "    APPLY_STATUS as apply_status " +
                 "from STUDY_APPLIES " +
                 "where POST_SEQ=?";
 
         return jdbcTemplate.query(query, new Object[]{postId.value()}, mapper);
+    }
+
+    // 해당 지원글 보기
+    @Override
+    public Optional<Apply> findByApplyId(Id<Apply, Long> applyId) {
+        String query = "SELECT " +
+                "    SEQ as seq, " +
+                "    POST_SEQ as post_seq, " +
+                "    APPLY_USER as apply_user, " +
+                "    CONTENT as content, " +
+                "    APPLY_STATUS as apply_status, " +
+                "    CREATED_AT as created_at " +
+                "from STUDY_APPLIES " +
+                "where SEQ=?";
+        List<Apply> results = jdbcTemplate.query(query, new Object[]{applyId.value()}, mapper);
+        return Optional.ofNullable(results.isEmpty()?null:results.get(0));
     }
 
     @Override

@@ -23,6 +23,10 @@ public class Apply {
     private Id<StudyCode, String> applyStatus;
     private LocalDateTime createdAt;
 
+    public Apply(Long postSeq, Id<User, Long> applyUser, String content) {
+        this(null, postSeq, applyUser, content, null, null);
+    }
+
     public Apply(Long seq, Long postSeq, Id<User, Long> applyUser,
                  Id<StudyCode, String> applyStatus, LocalDateTime createdAt) {
         this(seq, postSeq, applyUser, null, applyStatus, createdAt);

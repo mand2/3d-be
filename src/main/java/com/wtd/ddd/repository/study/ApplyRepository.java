@@ -7,6 +7,7 @@ import com.wtd.ddd.model.study.Post;
 import com.wtd.ddd.model.user.User;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created By mand2 on 2020-10-25.
@@ -24,6 +25,9 @@ public interface ApplyRepository {
 
     // 해당모집글에 지원한 지원자 리스트 보기
     List<Apply> findByPostId(Id<Post, Long> postId);
+
+    // 해당 지원글 보기
+    Optional<Apply> findByApplyId(Id<Apply, Long> applyId);
 
     // 해당모집글에 지원한 지원자 수 보기
     ApplyCount countByPostId(Id<Post, Long> postId);
