@@ -79,19 +79,10 @@ public class PostRepositoryImpl implements PostRepository {
         jdbcTemplate.update(query, post.getSeq());
     }
 
-    // TODO service 단에서 offset, limit 지정.
     // TODO dynamic query 테스트 필요.
     @Override
     public List<Post> findAll(String title, Id<StudyCode, String> placeId, Id<StudyCode, String> statusId,
                               Long offset, int limit) {
-//        String query = "SELECT " +
-//                "p.SEQ,\n" +
-//                "p.TITLE,\n" +
-//                "p.CONTENT,\n" +
-//                "p.PLACE_SEQ,\n" +
-//                "FROM STUDY_POSTS p " +
-//                "WHERE 1=1" +
-//                "limit ?,?";
         ArrayList args = new ArrayList();
 
         StringBuilder sb = new StringBuilder();
@@ -118,6 +109,30 @@ public class PostRepositoryImpl implements PostRepository {
         sb.append("limit ?,?");
 
         return jdbcTemplate.query(sb.toString(), new Object[]{args, offset, limit}, mapper);
+    }
+
+    @Override
+    public int findAllCount(String title, Id<StudyCode, String> placeId, Id<StudyCode, String> statusId) {
+        ArrayList args = new ArrayList();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT count(p.SEQ)");
+        sb.append("FROM STUDY_POSTS p ");
+        sb.append("WHERE p.DELETE_FLAG=false ");
+
+        if (null != title && !"".equals(title)) {
+            sb.append("AND p.title LIKE ? ");
+            args.add("%" + title + "%");
+        }
+        if (null != placeId && !"".equals(placeId.value())) {
+            sb.append("AND p.place_seq=? ");
+            args.add(placeId.value());
+        }
+        if (null != statusId && !"".equals(statusId.value())) {
+            sb.append("AND p.status_seq=? ");
+            args.add(statusId.value());
+        }
+        return jdbcTemplate.queryForObject(sb.toString(), new Object[]{args}, Integer.class);
     }
 
     @Override

@@ -47,7 +47,7 @@ public class StudyController {
 
     //모집글 다건조회-리스트
     @GetMapping("/post")
-    public ApiResult<List<Post>> getList(@RequestBody Pageable pageable,
+    public ApiResult<StudyPostResponse> getList(@RequestBody Pageable pageable,
                                          @PathVariable String title, @PathVariable String placeSeq, @PathVariable String statusSeq) {
         Long offset = pageable.offset();
         int limit = pageable.limit();
@@ -57,6 +57,10 @@ public class StudyController {
     }
 
     //모집글 단건조회-자세히보기
+    @GetMapping("/post/{postSeq}")
+    public ApiResult<StudyPostResponse> view(@PathVariable Long postSeq) {
+        return OK(studyService.findPost(Id.of(Post.class, postSeq)));
+    }
 
     //지원하기
     @PostMapping("/apply/{postSeq}")

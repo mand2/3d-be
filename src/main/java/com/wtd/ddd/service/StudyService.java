@@ -1,6 +1,7 @@
 package com.wtd.ddd.service;
 
 import com.google.common.base.Preconditions;
+import com.wtd.ddd.controller.study.StudyPostResponse;
 import com.wtd.ddd.error.NotFoundException;
 import com.wtd.ddd.model.commons.Id;
 import com.wtd.ddd.model.study.Apply;
@@ -17,6 +18,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -60,21 +62,43 @@ public class StudyService {
 
     //리스트
     @Transactional(readOnly = true)
-    public List<Post> posts(String title, Id<StudyCode, String> placeId, Id<StudyCode, String> statusId,
-                            Long offset, int limit) {
-        // list
-        // total count
-        return postRepository.findAll(title, placeId, statusId, offset, limit);
+    public StudyPostResponse posts(String title, Id<StudyCode, String> placeId, Id<StudyCode, String> statusId,
+                                   Long offset, int limit) {
+        List<Post> postList = new ArrayList<>();
+        int totalCount = 0;
+
+        postList = postRepository.findAll(title, placeId, statusId, offset, limit); // list
+        totalCount = postRepository.findAllCount(title, placeId, statusId); // total count
+
+        return new StudyPostResponse(postList, totalCount);
     }
 
     //자세히
+    public StudyPostResponse findPost(Id<Post, Long> postId) {
+//        checkNotNull(postId, "postId must be provided");
 
-    // postId로 post 단건 찾기
-//    @Transactional(readOnly = true)
-    private Optional<Post> findPost(Id<Post, Long> postId) {
-        checkNotNull(postId, "postId must be provided");
-        return postRepository.findById(postId);
+        //모집글이 있을 때에만 지원자관련 정보와 함께 보냄.
+        return postRepository.findById(postId).map(post -> {
+            List<Apply> applies = applyRepository.findByPostId(postId);
+            ApplyCount applyCount = applyRepository.countByPostId(postId);
+
+            return new StudyPostResponse(applies, applyCount, post);
+
+        }).orElseThrow(() -> new NotFoundException(Post.class, Post.class, Id.of(Post.class, postId)));
     }
+
+    // 모집글 지원자 보기
+    private List<Apply> applicantList(Id<Post, Long> postId) {
+        checkNotNull(postId, "postId must be provided");
+        return applyRepository.findByPostId(postId);
+    }
+
+    // 모집글 지원자 수
+    private ApplyCount applicantCount(Id<Post, Long> postId) {
+        checkNotNull(postId, "postId must be provided");
+        return applyRepository.countByPostId(postId);
+    }
+
 
     //지원하기
     @Transactional
@@ -113,6 +137,8 @@ public class StudyService {
             if (applyCount.getAcceptCount() < applyCount.getMemberNumber()) {
                 applyRepository.update(apply);
             }
+
+            // TODO 예외처리..! 추가가능한 인원 다 찼을 때.
         }
     }
 
@@ -122,19 +148,4 @@ public class StudyService {
         checkNotNull(userId, "userId must be provided");
         return applyRepository.findAll(userId);
     }
-
-    // 모집글 지원자 보기
-    @Transactional(readOnly = true)
-    public List<Apply> applicantList(Id<Post, Long> postId) {
-        checkNotNull(postId, "postId must be provided");
-        return applyRepository.findByPostId(postId);
-    }
-
-    // 모집글 지원자 수
-    @Transactional(readOnly = true)
-    public ApplyCount applicantCount(Id<Post, Long> postId) {
-        checkNotNull(postId, "postId must be provided");
-        return applyRepository.countByPostId(postId);
-    }
-
 }

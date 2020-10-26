@@ -1,5 +1,6 @@
 package com.wtd.ddd.model.study;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.wtd.ddd.model.commons.Id;
 import com.wtd.ddd.util.studycode.StatusUtils;
 import javafx.geometry.Pos;
