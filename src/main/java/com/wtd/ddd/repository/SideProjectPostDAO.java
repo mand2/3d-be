@@ -52,6 +52,11 @@ public class SideProjectPostDAO {
 
     public List<SideProjectPost> select(int seq) {
         String query = "SELECT * from side_project_post where seq = " + seq;
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectPost>(SideProjectPost.class));
+    }
+
+    public List<SideProjectPost> selectAll() {
+        String query = "SELECT * from side_project_post";
         List<SideProjectPost> posts = jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectPost>(SideProjectPost.class));
         log.error(posts.toString());
         return posts;

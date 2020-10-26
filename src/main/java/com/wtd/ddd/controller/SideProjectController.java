@@ -28,23 +28,27 @@ public class SideProjectController {
     private SideProjectService sideProjectService;
 
     @PostMapping("/post")
-    public String add(@RequestBody SideProjectPostRequest request) {
-        // TODO : 인원수 validation, 코드 정리
+    public String addPost(@RequestBody SideProjectPostRequest request) {
         log.error("INPUT:" + request.toString());
-        SideProjectPost post = SideProjectPostRequest.convertToPost(request);
-        int key = sideProjectPostDAO.insert(post);
-        List<SideProjectRecArea> areas = SideProjectPostRequest.convertToRecArea(request, key);
-        sideProjectService.addRecAreas(areas);
+        sideProjectService.writePost(request);
         return "SUCCESS";
     }
 
      @GetMapping("/posts/{seq}")
      @ResponseBody
-     public String get(@PathVariable int seq) {
-        //TODO 모집 분야별 정보, 인원도 가져와야 함
-        List<SideProjectPost> posts = sideProjectPostDAO.select(seq);
-        return new Gson().toJson(posts);
+     public String getPost(@PathVariable int seq) {
+        SideProjectPostResponse response = sideProjectService.get(seq);
+        return new Gson().toJson(response);
      }
+
+    @GetMapping("/posts/")
+    @ResponseBody
+    public String getPosts() {
+        List<SideProjectPost> posts = sideProjectPostDAO.selectAll();
+        return new Gson().toJson(posts);
+    }
+
+
 
     @GetMapping("/recs/")
     @ResponseBody

@@ -18,6 +18,8 @@ public class SideProjectPost {
     private String meeting;
     private String location;
     private String status;
+
+    private int memCapa;
     private int memTotalCapa;
     private String memInfoSeq;
 
@@ -27,20 +29,4 @@ public class SideProjectPost {
     private String deleteYn;
     private Date createDt;
 
-    @Override
-    public String toString() {
-        return "SideProjectPost{" +
-                "seq=" + seq +
-                ", leader='" + leader + '\'' +
-                ", meeting='" + meeting + '\'' +
-                ", location='" + location + '\'' +
-                ", status='" + status + '\'' +
-                ", memTotalCapa=" + memTotalCapa +
-                ", memInfoSeq=" + memInfoSeq +
-                ", title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
-                ", deleteYn='" + deleteYn + '\'' +
-                ", createDt=" + createDt +
-                '}';
-    }
 }

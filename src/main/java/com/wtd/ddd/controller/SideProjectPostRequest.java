@@ -16,7 +16,6 @@ public class SideProjectPostRequest {
     private String leader;
     private String meeting;
     private String location;
-    private String status;
     private int memTotalCapa;
 
     private String title;
@@ -43,8 +42,8 @@ public class SideProjectPostRequest {
             result.add(
                     SideProjectRecArea.builder()
                             .postSeq(id)
-                            .recArea(key)
-                            .recCapa(recrutingAreas.get(key))
+                            .area(key)
+                            .maxCapa(recrutingAreas.get(key))
                             .build()
             );
         }

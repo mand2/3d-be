@@ -12,18 +12,9 @@ import lombok.NoArgsConstructor;
 public class SideProjectRecArea {
     private int seq;
     private int postSeq;
-    private String recArea;
-    private int recCapa;
+    private String area;
+    private int nowCapa;
+    private int maxCapa;
     private String finishYn;
 
-    @Override
-    public String toString() {
-        return "SideProjectRecArea{" +
-                "seq=" + seq +
-                ", postSeq=" + postSeq +
-                ", recArea='" + recArea + '\'' +
-                ", recCapa=" + recCapa +
-                ", finishYn='" + finishYn + '\'' +
-                '}';
-    }
 }

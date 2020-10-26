@@ -27,16 +27,23 @@ public class SideProjectRecAreaDAO {
         simpleJdbcInsert
                 .withTableName("SIDE_PROJECT_REC_AREA")
                 .usingGeneratedKeyColumns("seq")
-                .usingColumns("post_seq","rec_area","rec_capa");
+                .usingColumns("post_seq","area","max_capa");
     }
 
     public int insert(SideProjectRecArea recArea) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("post_seq", recArea.getPostSeq())
-                .addValue("rec_area", recArea.getRecArea())
-                .addValue("rec_capa", recArea.getRecCapa());
+                .addValue("area", recArea.getArea())
+                .addValue("max_capa", recArea.getMaxCapa());
         simpleJdbcInsert.executeAndReturnKey(params);
         return 0;
+    }
+
+    public List<SideProjectRecArea> selectByPostSeq(int postSeq) {
+        String query = "SELECT * from side_project_rec_area where post_seq = " + postSeq + " and finish_yn = \'N\'";
+        List<SideProjectRecArea> areas = jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectRecArea>(SideProjectRecArea.class));
+        log.error(areas.toString());
+        return areas;
     }
 
     public List<SideProjectRecArea> select() {
