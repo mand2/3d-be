@@ -41,6 +41,7 @@ public class SideProjectController {
      @GetMapping("/posts/{seq}")
      @ResponseBody
      public String get(@PathVariable int seq) {
+        //TODO 모집 분야별 정보, 인원도 가져와야 함
         List<SideProjectPost> posts = sideProjectPostDAO.select(seq);
         return new Gson().toJson(posts);
      }
