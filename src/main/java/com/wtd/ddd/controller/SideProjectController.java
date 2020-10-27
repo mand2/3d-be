@@ -41,11 +41,18 @@ public class SideProjectController {
         return new Gson().toJson(response);
      }
 
-    @GetMapping("/posts/")
+    @GetMapping("/posts")
     @ResponseBody
-    public String getPosts() {
-        List<SideProjectPost> posts = sideProjectPostDAO.selectAll();
-        return new Gson().toJson(posts);
+    public String getPosts(@RequestParam(value = "search", required = false) String title,
+                           @RequestParam(value = "limit", required = false) Integer limit,
+                           @RequestParam(value = "offset", required = false) Integer offset) {
+        int totalCount = sideProjectPostDAO.getTotalCount(title);
+        List<SideProjectPost> posts = sideProjectPostDAO.selectAll(title, limit, offset);
+        SideProjectPostSearchResponse response = SideProjectPostSearchResponse.builder()
+                                                                                .totalCount(totalCount)
+                                                                                .posts(posts)
+                                                                                .build();
+        return new Gson().toJson(response);
     }
 
 

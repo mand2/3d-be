@@ -25,12 +25,12 @@ public class SideProjectPostResponse {
 
     private Date createDt;
 
-    private Map<String, Integer> recrutingArea; // response로 보내는 카운트는 현재 available한 인원수
+    private Map<String, Integer> recrutingArea;
 
     public static SideProjectPostResponse convert(SideProjectPost post, List<SideProjectRecArea> areas){
         Map<String, Integer> areaMap = new HashMap<>();
         for (SideProjectRecArea area : areas) {
-            areaMap.put(area.getArea(), area.getMaxCapa());
+            areaMap.put(area.getArea(), area.getMaxCapa() - area.getNowCapa()); // response로 보내는 카운트는 현재 available한 인원수
         }
 
         return SideProjectPostResponse.builder().seq(post.getSeq())

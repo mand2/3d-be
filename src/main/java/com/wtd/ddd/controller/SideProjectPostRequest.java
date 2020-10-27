@@ -2,7 +2,6 @@ package com.wtd.ddd.controller;
 
 import com.wtd.ddd.domain.SideProjectPost;
 import com.wtd.ddd.domain.SideProjectRecArea;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.*;
@@ -18,7 +17,7 @@ public class SideProjectPostRequest {
     private String title;
     private String contents;
 
-    private Map<String, Integer> recrutingArea;
+    private Map<String, Integer> recruitingArea;
 
     public static SideProjectPost convertToPost(SideProjectPostRequest request) {
         return SideProjectPost.builder()
@@ -48,7 +47,7 @@ public class SideProjectPostRequest {
     }
 
     private static Map<String, Integer> filterRecruitingAreaCapaMap(SideProjectPostRequest request) {
-        Map<String, Integer> recruitingAreas = request.getRecrutingArea();
+        Map<String, Integer> recruitingAreas = request.getRecruitingArea();
         Map<String, Integer> filteredRecruitingAreas = new HashMap<>();
         Set<String> keySet = recruitingAreas.keySet();
         for (String key : keySet) {

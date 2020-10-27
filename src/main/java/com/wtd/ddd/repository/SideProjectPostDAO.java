@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -55,11 +56,29 @@ public class SideProjectPostDAO {
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectPost>(SideProjectPost.class));
     }
 
-    public List<SideProjectPost> selectAll() {
+    public List<SideProjectPost> selectAll(String title, Integer limit, Integer offset) {
         String query = "SELECT * from side_project_post";
+
+        if (!StringUtils.isEmpty(title)) {
+            query += "  WHERE title like \'%" + title + "%\'";
+        }
+
+        if (limit != null && offset != null) {
+            query += " LIMIT " + limit + " OFFSET " + offset;
+        }
+
         List<SideProjectPost> posts = jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectPost>(SideProjectPost.class));
         log.error(posts.toString());
         return posts;
+    }
+
+    public int getTotalCount(String title) {
+        String query = "SELECT count(*) FROM side_project_post";
+        if (!StringUtils.isEmpty(title)) {
+            query += "  WHERE title like \'%" + title + "%\'";
+        }
+        int totalCount = jdbcTemplate.queryForObject(query, Integer.class);
+        return totalCount;
     }
 
 
