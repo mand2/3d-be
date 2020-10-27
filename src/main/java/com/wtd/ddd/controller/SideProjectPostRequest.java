@@ -5,10 +5,7 @@ import com.wtd.ddd.domain.SideProjectRecArea;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Data
 public class SideProjectPostRequest {
@@ -36,18 +33,32 @@ public class SideProjectPostRequest {
 
     public static List<SideProjectRecArea> convertToRecArea(SideProjectPostRequest request, int id) {
         List<SideProjectRecArea> result = new ArrayList<>();
-        Map<String, Integer> recrutingAreas = request.getRecrutingArea();
-        Set<String> keySet = recrutingAreas.keySet();
+        Map<String, Integer> areas = filterRecruitingAreaCapaMap(request);
+        Set<String> keySet = areas.keySet();
         for (String key : keySet) {
             result.add(
                     SideProjectRecArea.builder()
                             .postSeq(id)
                             .area(key)
-                            .maxCapa(recrutingAreas.get(key))
+                            .maxCapa(areas.get(key))
                             .build()
             );
         }
         return result;
+    }
+
+    private static Map<String, Integer> filterRecruitingAreaCapaMap(SideProjectPostRequest request) {
+        Map<String, Integer> recruitingAreas = request.getRecrutingArea();
+        Map<String, Integer> filteredRecruitingAreas = new HashMap<>();
+        Set<String> keySet = recruitingAreas.keySet();
+        for (String key : keySet) {
+            if (recruitingAreas.get(key) > 0) {
+                filteredRecruitingAreas.put(key, recruitingAreas.get(key));
+            }
+        }
+        return filteredRecruitingAreas;
+
+
     }
 
 
