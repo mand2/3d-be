@@ -1,6 +1,8 @@
 spring:
   application:
     name: 3ddd_developer
+  profiles:
+    active:
   h2:
     console:
       enabled: true
@@ -15,6 +17,10 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 5
       pool-name: H2_DB
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
 server:
   port: 8080
 

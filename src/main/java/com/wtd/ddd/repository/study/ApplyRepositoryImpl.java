@@ -75,7 +75,7 @@ public class ApplyRepositoryImpl implements ApplyRepository {
                 "from STUDY_APPLIES " +
                 "where APPLY_USER=?";
 
-        return jdbcTemplate.query(query, new Object[]{userId.value()}, mapper);
+        return jdbcTemplate.query(query, new Object[]{userId.value()}, mapper2);
     }
 
     // 해당모집글에 지원한 지원자 리스트 보기
@@ -86,9 +86,9 @@ public class ApplyRepositoryImpl implements ApplyRepository {
                 "    APPLY_USER as apply_user, " +
                 "    APPLY_STATUS as apply_status " +
                 "from STUDY_APPLIES " +
-                "where POST_SEQ=?";
+                "where post_seq=?";
 
-        return jdbcTemplate.query(query, new Object[]{postId.value()}, mapper);
+        return jdbcTemplate.query(query, new Object[]{postId.value()}, mapper2);
     }
 
     // 해당 지원글 보기
@@ -129,6 +129,13 @@ public class ApplyRepositoryImpl implements ApplyRepository {
             .applyStatus(Id.of(StudyCode.class, rs.getString("apply_status")))
             .createdAt(dateTimeOf(rs.getTimestamp("created_at")))
             .build();
+
+    static RowMapper<Apply> mapper2 = (rs, rowNum) -> new Apply.Builder()
+            .seq(rs.getLong("seq"))
+            .applyUser(Id.of(User.class, rs.getLong("apply_user")))
+            .applyStatus(Id.of(StudyCode.class, rs.getString("apply_status")))
+            .build();
+
 
     static RowMapper<ApplyCount> cntMapper = (rs, rowNum) ->
             new ApplyCount(

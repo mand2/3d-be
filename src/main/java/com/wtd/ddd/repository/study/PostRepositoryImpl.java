@@ -1,7 +1,6 @@
 package com.wtd.ddd.repository.study;
 
 import com.wtd.ddd.model.commons.Id;
-import com.wtd.ddd.model.study.Apply;
 import com.wtd.ddd.model.study.Post;
 import com.wtd.ddd.model.study.StudyCode;
 import com.wtd.ddd.model.study.Writer;
@@ -36,8 +35,8 @@ public class PostRepositoryImpl implements PostRepository {
     public Post save(Post post) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        String query = "INSERT INTO STUDY_POSTS(seq, title, content, writer, member_number, status_seq, place_seq, created_at) " +
-                "values(null,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO STUDY_POSTS(seq, title, content, writer, member_number, status_seq, place_seq, subject_seq, created_at) " +
+                "values(null,?,?,?,?,?,?,?,?)";
 
         jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(query, new String[]{"seq"});
@@ -47,7 +46,8 @@ public class PostRepositoryImpl implements PostRepository {
             ps.setInt(4, post.getMemberNumber());
             ps.setString(5, post.getStatusSeq().value());
             ps.setString(6, post.getPlaceSeq().value());
-            ps.setTimestamp(7, DateTimeUtils.timestampOf(post.getCreatedAt()));
+            ps.setString(7, post.getSubjectSeq());
+            ps.setTimestamp(8, DateTimeUtils.timestampOf(post.getCreatedAt()));
             return ps;
         }, keyHolder);
         Number key = keyHolder.getKey();
@@ -63,11 +63,13 @@ public class PostRepositoryImpl implements PostRepository {
                 "content=?, " +
                 "member_number=?, " +
                 "status_seq=?, " +
-                "place_seq=? " +
+                "place_seq=?, " +
+                "subject_seq=?, " +
+                "updated_at=curtime() " +
                 "WHERE seq=? ";
         jdbcTemplate.update(query,
                 post.getTitle(), post.getContent(), post.getMemberNumber(),
-                post.getStatusSeq().value(), post.getPlaceSeq().value(), post.getSeq());
+                post.getStatusSeq().value(), post.getPlaceSeq().value(), post.getSubjectSeq(), post.getSeq());
     }
 
     @Override
@@ -165,7 +167,7 @@ public class PostRepositoryImpl implements PostRepository {
             .memberNumber(rs.getInt("member_number"))
             .statusSeq(Id.of(StudyCode.class, rs.getString("status_seq")))
             .placeSeq(Id.of(StudyCode.class, rs.getString("place_seq")))
-            .subject(rs.getString("subject_seq"))
+            .subjectSeq(rs.getString("subject_seq"))
             .createdAt(dateTimeOf(rs.getTimestamp("created_at")))
             .build();
 }

@@ -87,7 +87,7 @@ SELECT
     a.APPLY_USER as apply_user,
     a.APPLY_STATUS as apply_status
 from STUDY_APPLIES a
-where a.POST_SEQ = 2 ;
+where a.POST_SEQ = 3 ;
 
 
 
@@ -104,3 +104,5 @@ left outer join STUDY_APPLIES a on a.POST_SEQ = p.SEQ
 where p.SEQ = 2;
 
 
+SELECT *
+FROM STUDY_POSTS;

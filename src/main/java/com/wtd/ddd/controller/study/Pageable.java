@@ -17,7 +17,7 @@ public class Pageable {
 
     public Long offset() {
         validation();
-        this.offset = offset * limit;
+        this.offset = (offset-1) * limit;
         return this.offset;
     }
 

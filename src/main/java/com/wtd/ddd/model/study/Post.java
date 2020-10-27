@@ -1,14 +1,11 @@
 package com.wtd.ddd.model.study;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.wtd.ddd.model.commons.Id;
 import com.wtd.ddd.util.studycode.StatusUtils;
-import javafx.geometry.Pos;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 import static java.time.LocalDateTime.now;
@@ -28,26 +25,26 @@ public class Post {
 
     private Id<StudyCode, String> statusSeq;
     private Id<StudyCode, String> placeSeq;
-    private String subject; // 추후 List<>으로 변경.
+    private String subjectSeq; // 추후 List<>으로 변경.
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean deleteFlag;
 
     public Post(String title, String content, Writer writer,
-                int memberNumber, Id<StudyCode, String> placeSeq, String subject) {
+                int memberNumber, Id<StudyCode, String> placeSeq, String subjectSeq) {
         this(null, title, content, writer, memberNumber,
-                null, placeSeq, subject, null, null, false);
+                null, placeSeq, subjectSeq, null, null, false);
     }
 
     public Post(Long seq, String title, String content, Writer writer,
-                int memberNumber, Id<StudyCode, String> placeSeq, String subject) {
+                int memberNumber, Id<StudyCode, String> placeSeq, String subjectSeq) {
         this(seq, title, content, writer, memberNumber,
-                null, placeSeq, subject, null, null, false);
+                null, placeSeq, subjectSeq, null, null, false);
     }
 
     public Post(Long seq, String title, String content, Writer writer, int memberNumber,
-                Id<StudyCode, String> statusSeq, Id<StudyCode, String> placeSeq, String subject,
+                Id<StudyCode, String> statusSeq, Id<StudyCode, String> placeSeq, String subjectSeq,
                 LocalDateTime createdAt, LocalDateTime updatedAt, boolean deleteFlag) {
         this.seq = seq;
         this.title = title;
@@ -56,7 +53,7 @@ public class Post {
         this.memberNumber = memberNumber;
         this.statusSeq = defaultIfNull(statusSeq, Id.of(StudyCode.class, StatusUtils.OPEN.getCodeSeq()));
         this.placeSeq = placeSeq;
-        this.subject = subject;
+        this.subjectSeq = subjectSeq;
         this.createdAt = defaultIfNull(createdAt, now());
         this.updatedAt = updatedAt;
         this.deleteFlag = deleteFlag;
@@ -68,7 +65,7 @@ public class Post {
         this.content = content;
         this.memberNumber = memberNumber;
         this.placeSeq = placeSeq;
-        this.subject = subject;
+        this.subjectSeq = subject;
     }
 
     public void modify(Id<StudyCode, String> statusSeq) {
@@ -103,8 +100,8 @@ public class Post {
         return placeSeq;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getSubjectSeq() {
+        return subjectSeq;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -142,7 +139,7 @@ public class Post {
                 .append("memberNumber", memberNumber)
                 .append("statusSeq", statusSeq)
                 .append("placeSeq", placeSeq)
-                .append("subject", subject)
+                .append("subject", subjectSeq)
                 .append("createdAt", createdAt)
                 .append("updatedAt", updatedAt)
                 .append("deleteFlag", deleteFlag)
@@ -157,11 +154,10 @@ public class Post {
         private int memberNumber;
         private Id<StudyCode, String> statusSeq;
         private Id<StudyCode, String> placeSeq;
-        private String subject;
+        private String subjectSeq;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private boolean deleteFlag;
-        private Apply apply;
 
 
         public Builder() {
@@ -175,7 +171,7 @@ public class Post {
             this.memberNumber = post.memberNumber;
             this.statusSeq = post.statusSeq;
             this.placeSeq = post.placeSeq;
-            this.subject = post.subject;
+            this.subjectSeq = post.subjectSeq;
             this.createdAt = post.createdAt;
             this.updatedAt = post.updatedAt;
             this.deleteFlag = post.deleteFlag;
@@ -216,8 +212,8 @@ public class Post {
             return this;
         }
 
-        public Builder subject(String subject) {
-            this.subject = subject;
+        public Builder subjectSeq(String subjectSeq) {
+            this.subjectSeq = subjectSeq;
             return this;
         }
 
@@ -238,7 +234,7 @@ public class Post {
 
         public Post build() {
             return new Post(seq, title, content, writer, memberNumber,
-                    statusSeq, placeSeq, subject, createdAt, updatedAt, deleteFlag);
+                    statusSeq, placeSeq, subjectSeq, createdAt, updatedAt, deleteFlag);
         }
     }
 }

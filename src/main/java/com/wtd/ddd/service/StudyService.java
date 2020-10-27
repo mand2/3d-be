@@ -1,5 +1,6 @@
 package com.wtd.ddd.service;
 
+import ch.qos.logback.core.status.StatusUtil;
 import com.google.common.base.Preconditions;
 import com.wtd.ddd.controller.study.StudyPostResponse;
 import com.wtd.ddd.error.NotFoundException;
@@ -110,9 +111,10 @@ public class StudyService {
     @Transactional
     public Apply applyModify(Id<Apply, Long> applyId, Id<StudyCode, String> applyStatus) {
         // seq로 가져온다.
+        // 스터디모집중+지원자대기중인 상태에서만 수정가능.
         return applyRepository.findByApplyId(applyId).map(apply -> {
-            // 대기중 일때만 수정 가능.
-            if (StatusUtils.WAITING.getCodeSeq().equals(apply.getApplyStatus().value())) {
+            if (StatusUtils.WAITING.getCodeSeq().equals(apply.getApplyStatus().value())
+                    && isOpen(apply)) {
                 // 취소 || 거절
                 denyOrCancel(applyStatus, apply);
                 //수락
@@ -122,12 +124,27 @@ public class StudyService {
         }).orElseThrow(() -> new NotFoundException(Apply.class, Apply.class, Id.of(Apply.class, applyId)));
     }
 
+    // 2. 스터디모집중인지? TODO 여기서 throw 하면 어떻게 되나?
+    private boolean isOpen(Apply apply) {
+        return postRepository.findById(Id.of(Post.class, apply.getPostSeq())).map(post -> {
+            if (StatusUtils.OPEN.getCodeSeq().equals(post.getStatusSeq().value())) {
+                return true;
+            }
+            return false;
+        }).orElseThrow(() -> new NotFoundException(
+                Post.class, Id.of(StudyCode.class, apply.getPostSeq()), Id.of(Apply.class, apply.getSeq())
+        ));
+    }
+
+
     // 지원 거절 혹은 취소
     private void denyOrCancel(Id<StudyCode, String> applyStatus, Apply apply) {
         if (StatusUtils.DENIED.getCodeSeq().equals(applyStatus.value())
             || StatusUtils.CANCEL.getCodeSeq().equals(applyStatus.value())) {
+            apply.modify(applyStatus); //바꿔야할 상태값으로 변경
             applyRepository.update(apply);
         }
+        // TODO 그 외의 경우 예외처리 -> 업데이트 안되었다는 알림.
     }
 
     //수락 -> 수락전, count 비교해서 수락가능. && 수락인원이 이 사람으로 인해 다 차면 post 또한 마감 ..?
@@ -135,10 +152,13 @@ public class StudyService {
         if (StatusUtils.ACCEPTED.getCodeSeq().equals(applyStatus.value())) {
             ApplyCount applyCount = applicantCount(Id.of(Post.class, apply.getPostSeq()));
             if (applyCount.getAcceptCount() < applyCount.getMemberNumber()) {
+                apply.modify(applyStatus); //바꿔야할 상태값으로 변경
                 applyRepository.update(apply);
             }
 
             // TODO 예외처리..! 추가가능한 인원 다 찼을 때.
+            // TODO 그 외의 경우 예외처리 -> 업데이트 안되었다는 알림.
+
         }
     }
 
