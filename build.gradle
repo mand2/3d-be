@@ -26,6 +26,7 @@ dependencies {
     compile('org.projectlombok:lombok')
     annotationProcessor("org.projectlombok:lombok:1.18.8")
 
+    annotationProcessor("org.projectlombok:lombok:1.18.8")
     compile('com.h2database:h2')
     compile('org.springframework.boot:spring-boot-starter-jdbc')
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.1'
