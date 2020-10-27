@@ -15,7 +15,7 @@ CREATE SEQUENCE SYSTEM_CODE_SEQ;
 -- 사이드 프로젝트 테이블 생성
 CREATE TABLE SIDE_PROJECT_POST (
    seq INT AUTO_INCREMENT NOT NULL,
-   leader VARCHAR(10) NOT NULL,
+   leader VARCHAR(20) NOT NULL,
    meeting VARCHAR(10) NOT NULL,
    location VARCHAR(30) NOT NULL,
    status VARCHAR(10) NOT NULL,
@@ -37,5 +37,14 @@ CREATE TABLE SIDE_PROJECT_REC_AREA (
    finish_yn VARCHAR(2) DEFAULT 'N'
 );
 
--- 글 먼저 생성하고 시퀀스 받음
--- 그 시퀀스로 REC_AREA에 넣기
+-- 사이드 프로젝트 지원현황 테이블 생성
+CREATE TABLE SIDE_PROJECT_APPLY (
+   seq INT AUTO_INCREMENT NOT NULL,
+   post_seq INT NOT NULL,
+   mem_id VARCHAR(20) NOT NULL,
+   rec_area VARCHAR(20) NOT NULL,
+   message VARCHAR(100),
+   apply_stat VARCHAR(10) NOT NULL DEFAULT 'WAITING',
+   create_dt DATE DEFAULT SYSDATE,
+   update_dt DATE
+);

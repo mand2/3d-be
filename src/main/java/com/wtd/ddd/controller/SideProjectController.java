@@ -1,7 +1,9 @@
 package com.wtd.ddd.controller;
 
 import com.google.gson.Gson;
+import com.wtd.ddd.domain.SideProjectApply;
 import com.wtd.ddd.domain.SideProjectRecArea;
+import com.wtd.ddd.repository.SideProjectApplyDAO;
 import com.wtd.ddd.repository.SideProjectPostDAO;
 import com.wtd.ddd.domain.SideProjectPost;
 import com.wtd.ddd.repository.SideProjectRecAreaDAO;
@@ -25,13 +27,17 @@ public class SideProjectController {
     private SideProjectRecAreaDAO sideProjectRecAreaDAO;
 
     @Autowired
+    private SideProjectApplyDAO sideProjectApplyDAO;
+
+    @Autowired
     private SideProjectService sideProjectService;
 
     @PostMapping("/post")
+    @ResponseBody
     public String addPost(@RequestBody SideProjectPostRequest request) {
-        log.error("INPUT:" + request.toString());
+        log.error("Request:" + request.toString());
         sideProjectService.writePost(request);
-        return "SUCCESS";
+        return "등록 성공!";
     }
 
      @GetMapping("/posts/{seq}")
@@ -55,6 +61,21 @@ public class SideProjectController {
         return new Gson().toJson(response);
     }
 
+    @PostMapping("/apply")
+    @ResponseBody
+    public String apply(@RequestBody SideProjectApplyRequest request) {
+        log.error("Request:" + request.toString());
+        SideProjectApply apply = SideProjectApply.convert(request);
+        sideProjectApplyDAO.insert(apply);
+        return "지원 성공!";
+    }
+
+    @GetMapping("/mypage/{memId}/applys/")
+    @ResponseBody
+    public String getMyApplies(@PathVariable String memId) {
+        List<SideProjectApply> applies = sideProjectApplyDAO.selectByMemId(memId);
+        return new Gson().toJson(applies);
+    }
 
 
     @GetMapping("/recs/")
