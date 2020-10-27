@@ -1,5 +1,6 @@
 package com.wtd.ddd.repository;
 
+import com.wtd.ddd.controller.SideProjectMyApplyResponse;
 import com.wtd.ddd.domain.SideProjectApply;
 import com.wtd.ddd.domain.SideProjectPost;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +40,13 @@ public class SideProjectApplyDAO {
         return number.intValue();
     }
 
-    public List<SideProjectApply> selectByMemId(String memId) {
-        String query = "SELECT * from side_project_apply where mem_id = \'" + memId + "\'";
-        return jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectApply>(SideProjectApply.class));
+    public List<SideProjectMyApplyResponse> selectByApplicantsMemId(String memId) {
+        String query = "select a.seq, a.apply_stat AS status, b.mem_capa, b.mem_total_capa,\n" +
+                "        b.title, b.create_dt\n" +
+                " from side_project_apply a, side_project_post b where a.post_seq = b.seq " +
+                " and a.mem_id = \'" + memId + "\'";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectMyApplyResponse>(SideProjectMyApplyResponse.class));
     }
+
 
 }

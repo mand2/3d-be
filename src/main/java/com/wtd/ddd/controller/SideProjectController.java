@@ -70,10 +70,17 @@ public class SideProjectController {
         return "지원 성공!";
     }
 
-    @GetMapping("/mypage/{memId}/applys/")
+    @GetMapping("/mypage/{memId}/applys")
     @ResponseBody
     public String getMyApplies(@PathVariable String memId) {
-        List<SideProjectApply> applies = sideProjectApplyDAO.selectByMemId(memId);
+        List<SideProjectMyApplyResponse> applies = sideProjectApplyDAO.selectByApplicantsMemId(memId);
+        return new Gson().toJson(applies);
+    }
+
+    @GetMapping("/mypage/{memId}/recruiting")
+    @ResponseBody
+    public String getMyRecruiting(@PathVariable String memId) {
+        List<SideProjectMyApplyResponse> applies = sideProjectPostDAO.selectByLeaderMemId(memId);
         return new Gson().toJson(applies);
     }
 

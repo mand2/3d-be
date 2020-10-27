@@ -1,5 +1,6 @@
 package com.wtd.ddd.repository;
 
+import com.wtd.ddd.controller.SideProjectMyApplyResponse;
 import com.wtd.ddd.domain.SideProjectPost;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,8 +82,12 @@ public class SideProjectPostDAO {
         return totalCount;
     }
 
-
-
-
+    public List<SideProjectMyApplyResponse> selectByLeaderMemId(String memId) {
+        String query = "select a.seq, a.apply_stat AS status, b.mem_capa, b.mem_total_capa,\n" +
+                "        b.title, b.create_dt\n" +
+                " from side_project_apply a, side_project_post b where a.post_seq = b.seq " +
+                " and b.leader = \'" + memId + "\'";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectMyApplyResponse>(SideProjectMyApplyResponse.class));
+    }
 
 }
