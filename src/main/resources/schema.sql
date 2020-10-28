@@ -1,17 +1,3 @@
--- 공용 테이블 (회원) 생성 (TODO)
-
--- 공통 테이블 (시스템 코드)
-CREATE TABLE SYSTEM_CODE (
-    seq INT AUTO_INCREMENT NOT NULL,
-    group_code VARCHAR(10) NOT NULL,
-    group_name VARCHAR(40),
-    detail_code VARCHAR(10) NOT NULL,
-    detail_name VARCHAR(40),
-    CONSTRAINT SYSTEM_CODE PRIMARY KEY (seq)
-);
-
-CREATE SEQUENCE SYSTEM_CODE_SEQ;
-
 -- 사이드 프로젝트 테이블 생성
 CREATE TABLE SIDE_PROJECT_POST (
    seq INT AUTO_INCREMENT NOT NULL,
