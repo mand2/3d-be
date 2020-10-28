@@ -72,12 +72,9 @@ public class SideProjectPostDAO {
         return totalCount;
     }
 
-    public List<SideProjectMyApplyResponse> selectByLeaderMemId(String memId) {
-        String query = "select a.seq AS apply_seq, a.apply_stat AS status, b.mem_capa, b.mem_total_capa,\n" +
-                "        b.title, b.create_dt\n" +
-                " from side_project_apply a, side_project_post b where a.post_seq = b.seq " +
-                " and b.leader = \'" + memId + "\'";
-        return jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectMyApplyResponse>(SideProjectMyApplyResponse.class));
+    public List<SideProjectPost> selectByLeaderMemId(String memId) {
+        String query = "select * from side_project_post where leader = \'" + memId + "\'";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectPost>(SideProjectPost.class));
     }
 
     public int updateCapacity(int applySeq) {

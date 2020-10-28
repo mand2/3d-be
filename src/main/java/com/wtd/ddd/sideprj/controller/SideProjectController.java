@@ -81,7 +81,7 @@ public class SideProjectController {
     @GetMapping("/mypage/{memId}/recruiting")
     @ResponseBody
     public String getMyRecruiting(@PathVariable String memId) {
-        List<SideProjectMyApplyResponse> applies = sideProjectPostDAO.selectByLeaderMemId(memId);
+        List<SideProjectPost> applies = sideProjectPostDAO.selectByLeaderMemId(memId);
         return new Gson().toJson(applies);
     }
 
