@@ -7,8 +7,12 @@ import com.wtd.ddd.model.study.Writer;
 import com.wtd.ddd.model.user.User;
 import com.wtd.ddd.util.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -25,10 +29,12 @@ import static com.wtd.ddd.util.DateTimeUtils.dateTimeOf;
 public class PostRepositoryImpl implements PostRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
-    public PostRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public PostRepositoryImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     @Override
@@ -81,41 +87,41 @@ public class PostRepositoryImpl implements PostRepository {
         jdbcTemplate.update(query, post.getSeq());
     }
 
-    // TODO dynamic query 테스트 필요.
     @Override
     public List<Post> findAll(String title, Id<StudyCode, String> placeId, Id<StudyCode, String> statusId,
                               Long offset, int limit) {
-        ArrayList args = new ArrayList();
-
+        Map<String, Object> params = new HashMap<>();
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ");
-        sb.append(" p.SEQ, ");
-        sb.append(" p.TITLE, ");
-        sb.append(" p.CONTENT, ");
-        sb.append(" p.PLACE_SEQ, ");
-        sb.append("FROM STUDY_POSTS p ");
-        sb.append("WHERE p.DELETE_FLAG=false ");
+        sb.append(" SEQ, ");
+        sb.append(" TITLE, ");
+        sb.append(" CONTENT, ");
+        sb.append(" PLACE_SEQ ");
+        sb.append("FROM STUDY_POSTS ");
+        sb.append("WHERE DELETE_FLAG=false ");
 
         if (null != title && !"".equals(title)) {
-            sb.append("AND p.title LIKE ? ");
-            args.add("%" + title + "%");
+            sb.append("AND title LIKE :title ");
+            params.put("title", "%"+title+"%");
         }
         if (null != placeId && !"".equals(placeId.value())) {
-            sb.append("AND p.place_seq=? ");
-            args.add(placeId.value());
+            sb.append("AND place_seq=:place_seq ");
+            params.put("place_seq", placeId.value());
         }
         if (null != statusId && !"".equals(statusId.value())) {
-            sb.append("AND p.status_seq=? ");
-            args.add(statusId.value());
+            sb.append("AND status_seq=:status_seq ");
+            params.put("status_seq", statusId.value());
         }
-        sb.append("limit ?,?");
+        sb.append("limit :offset , :limit");
+        params.put("offset", offset);
+        params.put("limit", limit);
 
-        return jdbcTemplate.query(sb.toString(), new Object[]{args, offset, limit}, mapper);
+        return namedParameterJdbcTemplate.query(sb.toString(), params, mapper2);
     }
 
     @Override
     public int findAllCount(String title, Id<StudyCode, String> placeId, Id<StudyCode, String> statusId) {
-        ArrayList args = new ArrayList();
+        Map<String, Object> params = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(p.SEQ)");
@@ -123,18 +129,19 @@ public class PostRepositoryImpl implements PostRepository {
         sb.append("WHERE p.DELETE_FLAG=false ");
 
         if (null != title && !"".equals(title)) {
-            sb.append("AND p.title LIKE ? ");
-            args.add("%" + title + "%");
+            sb.append("AND title LIKE :title ");
+            params.put("title", "%"+title+"%");
         }
         if (null != placeId && !"".equals(placeId.value())) {
-            sb.append("AND p.place_seq=? ");
-            args.add(placeId.value());
+            sb.append("AND place_seq=:place_seq ");
+            params.put("place_seq", placeId.value());
         }
         if (null != statusId && !"".equals(statusId.value())) {
-            sb.append("AND p.status_seq=? ");
-            args.add(statusId.value());
+            sb.append("AND status_seq=:status_seq ");
+            params.put("status_seq", statusId.value());
         }
-        return jdbcTemplate.queryForObject(sb.toString(), new Object[]{args}, Integer.class);
+
+        return namedParameterJdbcTemplate.queryForObject(sb.toString(), params, Integer.class);
     }
 
     @Override
@@ -169,5 +176,12 @@ public class PostRepositoryImpl implements PostRepository {
             .placeSeq(Id.of(StudyCode.class, rs.getString("place_seq")))
             .subjectSeq(rs.getString("subject_seq"))
             .createdAt(dateTimeOf(rs.getTimestamp("created_at")))
+            .build();
+
+    static RowMapper<Post> mapper2 = (rs, rowNum) -> new Post.Builder()
+            .seq(rs.getLong("seq"))
+            .title(rs.getString("title"))
+            .content(rs.getString("content"))
+            .placeSeq(Id.of(StudyCode.class, rs.getString("place_seq")))
             .build();
 }

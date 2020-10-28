@@ -47,8 +47,11 @@ public class StudyController {
 
     //모집글 다건조회-리스트
     @GetMapping("/post")
-    public ApiResult<StudyPostResponse> getList(@RequestBody Pageable pageable,
-                                         @PathVariable String title, @PathVariable String placeSeq, @PathVariable String statusSeq) {
+    public ApiResult<StudyPostResponse> getList(@ModelAttribute Pageable pageable,
+                                                @RequestParam(required = false, defaultValue = "") String title,
+                                                @RequestParam(required = false, defaultValue = "") String placeSeq,
+                                                @RequestParam(required = false, defaultValue = "") String statusSeq) {
+
         Long offset = pageable.offset();
         int limit = pageable.limit();
         return OK(studyService.posts(
