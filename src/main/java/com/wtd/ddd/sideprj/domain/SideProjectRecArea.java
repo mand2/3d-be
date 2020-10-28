@@ -1,4 +1,4 @@
-package com.wtd.ddd.domain;
+package com.wtd.ddd.sideprj.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ public class SideProjectRecArea {
     private int seq;
     private int postSeq;
     private String area;
-    private int nowCapa;
+    private int fixedCapa;
     private int maxCapa;
     private String finishYn;
 

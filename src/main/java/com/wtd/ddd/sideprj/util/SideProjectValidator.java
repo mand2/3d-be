@@ -1,4 +1,4 @@
-package com.wtd.ddd.util;
+package com.wtd.ddd.sideprj.util;
 
 public class SideProjectValidator {
 }

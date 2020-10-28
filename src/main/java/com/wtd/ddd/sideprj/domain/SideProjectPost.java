@@ -1,4 +1,4 @@
-package com.wtd.ddd.domain;
+package com.wtd.ddd.sideprj.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

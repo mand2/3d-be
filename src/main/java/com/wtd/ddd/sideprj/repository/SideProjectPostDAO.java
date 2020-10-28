@@ -1,25 +1,16 @@
-package com.wtd.ddd.repository;
+package com.wtd.ddd.sideprj.repository;
 
-import com.wtd.ddd.controller.SideProjectMyApplyResponse;
-import com.wtd.ddd.domain.SideProjectPost;
+import com.wtd.ddd.sideprj.web.SideProjectMyApplyResponse;
+import com.wtd.ddd.sideprj.domain.SideProjectPost;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -36,7 +27,7 @@ public class SideProjectPostDAO {
         simpleJdbcInsert
                 .withTableName("side_project_post")
                 .usingGeneratedKeyColumns("seq")
-                .usingColumns("leader","meeting","location","status","mem_total_capa","title","contents");
+                .usingColumns("leader","meeting","location","mem_total_capa","title","contents");
     }
 
     public int insert(SideProjectPost post) {
@@ -44,7 +35,6 @@ public class SideProjectPostDAO {
                                     .addValue("leader", post.getLeader())
                                     .addValue("meeting", post.getMeeting())
                                     .addValue("location", post.getLocation())
-                                    .addValue("status", "01")
                                     .addValue("mem_total_capa", post.getMemTotalCapa())
                                     .addValue("title", post.getTitle())
                                     .addValue("contents", post.getContents());
@@ -83,11 +73,30 @@ public class SideProjectPostDAO {
     }
 
     public List<SideProjectMyApplyResponse> selectByLeaderMemId(String memId) {
-        String query = "select a.seq, a.apply_stat AS status, b.mem_capa, b.mem_total_capa,\n" +
+        String query = "select a.seq AS apply_seq, a.apply_stat AS status, b.mem_capa, b.mem_total_capa,\n" +
                 "        b.title, b.create_dt\n" +
                 " from side_project_apply a, side_project_post b where a.post_seq = b.seq " +
                 " and b.leader = \'" + memId + "\'";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectMyApplyResponse>(SideProjectMyApplyResponse.class));
     }
+
+    public int updateCapacity(int applySeq) {
+        String query = "UPDATE side_project_post SET mem_capa = mem_capa + 1 WHERE seq = ( \n"
+                + " select a.post_seq from side_project_apply a where a.seq = ? )";
+        return jdbcTemplate.update(query, applySeq);
+    }
+
+    public List<SideProjectPost> selectByApplySeq(int applySeq) {
+        String query = "SELECT * from side_project_post where seq = ( \n"
+                + " select post_seq from side_project_apply where seq = " + applySeq + " )";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectPost>(SideProjectPost.class));
+    }
+
+    public int updateToFinish(int applySeq) {
+        String query = "UPDATE side_project_post SET finish_yn = 'Y' WHERE seq = ( \n"
+                + " select post_seq from side_project_apply where seq = " + applySeq +  ") ";
+        return jdbcTemplate.update(query, applySeq);
+    }
+
 
 }

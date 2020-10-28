@@ -1,6 +1,6 @@
-package com.wtd.ddd.controller;
+package com.wtd.ddd.sideprj.web;
 
-import com.wtd.ddd.domain.SideProjectPost;
+import com.wtd.ddd.sideprj.domain.SideProjectPost;
 import lombok.Builder;
 
 import java.util.List;

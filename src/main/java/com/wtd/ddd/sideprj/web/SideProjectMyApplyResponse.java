@@ -1,4 +1,4 @@
-package com.wtd.ddd.controller;
+package com.wtd.ddd.sideprj.web;
 
 import lombok.Data;
 
@@ -6,8 +6,9 @@ import java.util.Date;
 
 @Data
 public class SideProjectMyApplyResponse {
-    private int seq;
-    private String status;
+    private int applySeq;
+    private String myStatus;
+    private String prjStatus;
     private int memCapa;
     private int memTotalCapa;
     private String title;

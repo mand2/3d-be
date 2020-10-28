@@ -1,13 +1,15 @@
-package com.wtd.ddd.controller;
+package com.wtd.ddd.sideprj.controller;
 
 import com.google.gson.Gson;
-import com.wtd.ddd.domain.SideProjectApply;
-import com.wtd.ddd.domain.SideProjectRecArea;
-import com.wtd.ddd.repository.SideProjectApplyDAO;
-import com.wtd.ddd.repository.SideProjectPostDAO;
-import com.wtd.ddd.domain.SideProjectPost;
-import com.wtd.ddd.repository.SideProjectRecAreaDAO;
-import com.wtd.ddd.service.SideProjectService;
+import com.wtd.ddd.Application;
+import com.wtd.ddd.sideprj.domain.SideProjectApply;
+import com.wtd.ddd.sideprj.domain.SideProjectRecArea;
+import com.wtd.ddd.sideprj.repository.SideProjectApplyDAO;
+import com.wtd.ddd.sideprj.repository.SideProjectPostDAO;
+import com.wtd.ddd.sideprj.domain.SideProjectPost;
+import com.wtd.ddd.sideprj.repository.SideProjectRecAreaDAO;
+import com.wtd.ddd.sideprj.service.SideProjectService;
+import com.wtd.ddd.sideprj.web.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -65,12 +67,11 @@ public class SideProjectController {
     @ResponseBody
     public String apply(@RequestBody SideProjectApplyRequest request) {
         log.error("Request:" + request.toString());
-        SideProjectApply apply = SideProjectApply.convert(request);
-        sideProjectApplyDAO.insert(apply);
+        sideProjectService.addApply(request);
         return "지원 성공!";
     }
 
-    @GetMapping("/mypage/{memId}/applys")
+    @GetMapping("/mypage/{memId}/applies")
     @ResponseBody
     public String getMyApplies(@PathVariable String memId) {
         List<SideProjectMyApplyResponse> applies = sideProjectApplyDAO.selectByApplicantsMemId(memId);
@@ -82,6 +83,30 @@ public class SideProjectController {
     public String getMyRecruiting(@PathVariable String memId) {
         List<SideProjectMyApplyResponse> applies = sideProjectPostDAO.selectByLeaderMemId(memId);
         return new Gson().toJson(applies);
+    }
+
+    @GetMapping("/mypage/{memId}/recruiting/{postSeq}")
+    @ResponseBody
+    public String getAppliesToMyRecruiting(@PathVariable String memId, @PathVariable int postSeq) {
+        List<SideProjectApplyToMeResponse> applies = sideProjectApplyDAO.selectAppliesByPostSeq(postSeq);
+        return new Gson().toJson(applies);
+    }
+
+    @PostMapping("/mypage/recruiting/update")
+    @ResponseBody
+    public String changeApplyStatus(@RequestBody SideProjectStatusChangeRequest request) {
+        if (!SideProjectApply.validate(request)) {
+            return "유효하지 않은 값";
+        }
+        SideProjectApply apply = SideProjectApply.convertToChangeStatus(request);
+        return sideProjectService.changeApplyStatus(apply) ? "변경 성공" : "변경 실패";
+    }
+
+    @GetMapping("/mypage/apply/{applySeq}/cancel}")
+    @ResponseBody
+    public String cancelApply(int applySeq){
+        sideProjectApplyDAO.updateToCancel(applySeq);
+        return "취소되었습니다";
     }
 
 

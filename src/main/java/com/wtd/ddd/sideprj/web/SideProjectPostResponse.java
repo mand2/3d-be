@@ -1,7 +1,7 @@
-package com.wtd.ddd.controller;
+package com.wtd.ddd.sideprj.web;
 
-import com.wtd.ddd.domain.SideProjectPost;
-import com.wtd.ddd.domain.SideProjectRecArea;
+import com.wtd.ddd.sideprj.domain.SideProjectPost;
+import com.wtd.ddd.sideprj.domain.SideProjectRecArea;
 import lombok.Builder;
 import lombok.Data;
 
@@ -30,9 +30,8 @@ public class SideProjectPostResponse {
     public static SideProjectPostResponse convert(SideProjectPost post, List<SideProjectRecArea> areas){
         Map<String, Integer> areaMap = new HashMap<>();
         for (SideProjectRecArea area : areas) {
-            areaMap.put(area.getArea(), area.getMaxCapa() - area.getNowCapa()); // response로 보내는 카운트는 현재 available한 인원수
+            areaMap.put(area.getArea(), area.getMaxCapa() - area.getFixedCapa()); // response로 보내는 카운트는 현재 available한 인원수
         }
-
         return SideProjectPostResponse.builder().seq(post.getSeq())
                 .leader(post.getLeader())
                 .meeting(post.getMeeting())

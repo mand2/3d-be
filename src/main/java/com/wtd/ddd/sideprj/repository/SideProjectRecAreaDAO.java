@@ -1,9 +1,7 @@
-package com.wtd.ddd.repository;
+package com.wtd.ddd.sideprj.repository;
 
-import com.wtd.ddd.domain.SideProjectPost;
-import com.wtd.ddd.domain.SideProjectRecArea;
+import com.wtd.ddd.sideprj.domain.SideProjectRecArea;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -46,11 +44,37 @@ public class SideProjectRecAreaDAO {
         return areas;
     }
 
+    public List<SideProjectRecArea> selectBySeq(int recSeq) {
+        String query = "SELECT * from side_project_rec_area where seq = " + recSeq;
+        List<SideProjectRecArea> areas = jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectRecArea>(SideProjectRecArea.class));
+        log.error(areas.toString());
+        return areas;
+    }
+
     public List<SideProjectRecArea> select() {
         String query = "SELECT * from side_project_rec_area";
         List<SideProjectRecArea> areas = jdbcTemplate.query(query, new BeanPropertyRowMapper<SideProjectRecArea>(SideProjectRecArea.class));
         log.error(areas.toString());
         return areas;
+    }
+
+    public int updateCapacity(int recSeq) {
+        String query = "UPDATE side_project_rec_area SET fixed_capa = fixed_capa + 1 WHERE seq = ? ";
+        return jdbcTemplate.update(query, recSeq);
+    }
+
+    public int updateToFinish(int applySeq) {
+        String query = "UPDATE side_project_rec_area SET finish_yn = 'Y' WHERE seq = ( \n"
+                + " select a.seq from side_project_rec_area a, side_project_post b, side_project_apply c \n" +
+                "                                              where c.post_seq = b.seq and b.seq = a.post_seq and c.seq =" + applySeq + ")";
+        return jdbcTemplate.update(query, applySeq);
+    }
+
+    public int findRecAreaSeq(int postSeq, String recArea) {
+        String query = "select seq\n" +
+                "from side_project_rec_area\n" +
+                "where post_seq =" + postSeq + " and area = \'" + recArea + "\'";
+        return jdbcTemplate.queryForObject(query, Integer.class);
     }
 
 }
