@@ -43,7 +43,7 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(3, user.getName());
             ps.setTimestamp(4, DateTimeUtils.timestampOf(user.getCreatedAt()));
             return ps;
-        });
+        }, keyHolder);
         Number key = keyHolder.getKey();
         long generatedSeq = key != null ? key.longValue() : -1;
         return new User.Builder(user).seq(generatedSeq).build();
@@ -56,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository {
                 " user_id, " +
                 " email, " +
                 " name, " +
-                " created_at, " +
+                " created_at " +
                 "FROM USERS " +
                 "WHERE SEQ=?";
 

@@ -39,6 +39,7 @@ public class UserController {
         return OK(userService.join(joinRequest.newUser()));
     }
 
+    //내정보보기
     @GetMapping("/mypage/{seq}")
     public ApiResult<User> mypage(@PathVariable Long seq) {
         return OK(userService.myInfo(Id.of(User.class, seq)));

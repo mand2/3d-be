@@ -2,7 +2,7 @@ spring:
   application:
     name: 3ddd_developer
   profiles:
-    active:
+    active: server
   h2:
     console:
       enabled: true
@@ -26,14 +26,6 @@ spring:
       charset: utf-8
       enabled: true
       force: true
-
-server:
-  port: 8443
-  ssl:
-    key-store: keystore.p12
-    key-store-password: 3dddadmin
-    keyStoreType: PKCS12
-    keyAlias: bns-ssl
 
 
 3ddd:
