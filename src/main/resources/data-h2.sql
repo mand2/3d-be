@@ -15,11 +15,11 @@ INSERT INTO SYSTEM_CODE(group_code, group_desc, code_seq, code_desc, enable) VAL
 INSERT INTO SYSTEM_CODE(group_code, group_desc, code_seq, code_desc, enable) VALUES ('SP', '스터디 장소 코드', 'SP99', '온라인', true);
 
 /*users 세팅*/
-INSERT INTO USERS(seq, USER_ID, email, name) values ( null, '125184', 'test@test.com', 'tester');
-INSERT INTO USERS(seq, USER_ID, email, name) values ( null, '125185', 'test2@test.com', 'tester2');
-INSERT INTO USERS(seq, USER_ID, email, name, CREATED_AT) values ( null, '125185', 'test2@test.com', 'tester2', curtime());
-INSERT INTO USERS(seq, USER_ID, email, name, CREATED_AT) values ( null, '125185', 'test2@test.com', 'tester2', curtime());
-INSERT INTO USERS(seq, USER_ID, email, name, CREATED_AT) values ( null, '125185', 'test2@test.com', 'tester2', curtime());
+INSERT INTO USERS(seq, USER_ID, email, name) values ( null, 125184, 'test@test.com', 'tester');
+INSERT INTO USERS(seq, USER_ID, email, name) values ( null, 125185, 'test2@test.com', 'tester2');
+INSERT INTO USERS(seq, USER_ID, email, name, CREATED_AT) values ( null, 125285, 'test2@test.com', 'tester2', curtime());
+INSERT INTO USERS(seq, USER_ID, email, name, CREATED_AT) values ( null, 125785, 'test2@test.com', 'tester2', curtime());
+INSERT INTO USERS(seq, USER_ID, email, name, CREATED_AT) values ( null, 255168, 'test2@test.com', 'tester2', curtime());
 
 -- DELETE from USERS WHERE USER_ID > 0;
 

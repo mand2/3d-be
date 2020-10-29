@@ -26,8 +26,17 @@ public interface PostRepository {
     List<Post> findAll(String title, Id<StudyCode, String> placeId, Id<StudyCode, String> statusId,
                        Long offset, int limit);
 
+    //스터디모집글 리스트 count
     int findAllCount(String title, Id<StudyCode, String> placeId, Id<StudyCode, String> statusId);
 
     //스터디모집글 자세히 보기
     Optional<Post> findById(Id<Post, Long> postId);
+
+    //스터디작성자-> 모집글리스트 보기
+    List<Post> findAllByUserId(Id<User, Long> userId, Long offset, int limit);
+
+    //스터디지원자 -> 스터디모집 리스트보기
+    List<Post> findAllByApplierId(Id<User, Long> userId, Long offset, int limit);
+
+
 }

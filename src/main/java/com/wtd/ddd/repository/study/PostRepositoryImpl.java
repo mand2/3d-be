@@ -166,6 +166,43 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
 
+    //스터디작성자-> 모집글리스트 보기
+    @Override
+    public List<Post> findAllByUserId(Id<User, Long> userId, Long offset, int limit) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        sb.append(" SEQ, ");
+        sb.append(" TITLE, ");
+        sb.append(" CONTENT, ");
+        sb.append(" PLACE_SEQ ");
+        sb.append("FROM STUDY_POSTS ");
+        sb.append("WHERE DELETE_FLAG=false ");
+        sb.append("AND WRITER=? ");
+        sb.append("limit ?,? ");
+
+        return jdbcTemplate.query(sb.toString(), new Object[]{userId.value(), offset, limit}, mapper2);
+    }
+
+
+    @Override
+    public List<Post> findAllByApplierId(Id<User, Long> userId, Long offset, int limit) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        sb.append(" p.SEQ, ");
+        sb.append(" p.TITLE, ");
+        sb.append(" p.CONTENT, ");
+        sb.append(" p.PLACE_SEQ ");
+        sb.append("FROM STUDY_APPLIES a ");
+        sb.append("RIGHT OUTER JOIN STUDY_POSTS p ");
+        sb.append("ON p.seq = a.post_seq ");
+        sb.append("WHERE a.apply_user=? ");
+        sb.append("limit ?,? ");
+
+        return jdbcTemplate.query(sb.toString(), new Object[]{userId.value(), offset, limit}, mapper2);
+    }
+
     static RowMapper<Post> mapper = (rs, rowNum) -> new Post.Builder()
             .seq(rs.getLong("seq"))
             .title(rs.getString("title"))
