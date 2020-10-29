@@ -12,6 +12,13 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+
+bootWar {
+    archiveBaseName= '3d-backend'
+    archiveFileName= '3d-backend-api.war'
+    archiveVersion= '0.0.0'
+}
 
 group 'com.wtm.3d'
 version '1.0-SNAPSHOT'
