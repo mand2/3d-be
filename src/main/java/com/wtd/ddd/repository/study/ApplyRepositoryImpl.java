@@ -1,10 +1,7 @@
 package com.wtd.ddd.repository.study;
 
 import com.wtd.ddd.model.commons.Id;
-import com.wtd.ddd.model.study.Apply;
-import com.wtd.ddd.model.study.ApplyCount;
-import com.wtd.ddd.model.study.Post;
-import com.wtd.ddd.model.study.StudyCode;
+import com.wtd.ddd.model.study.*;
 import com.wtd.ddd.model.user.User;
 import com.wtd.ddd.util.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,12 +66,16 @@ public class ApplyRepositoryImpl implements ApplyRepository {
     @Override
     public List<Apply> findAll(Id<User, Long> userId) {
         String query = "SELECT " +
-                "    SEQ as seq, " +
-                "    APPLY_USER as apply_user, " +
-                "    APPLY_STATUS as apply_status " +
+                "    a.SEQ as seq, " +
+                "    a.APPLY_USER as apply_user, " +
+                "    a.APPLY_STATUS as apply_status, " +
+                "    p.TITLE as title, " +
+                "    p.STATUS_SEQ as status_seq " +
 
-                "from STUDY_APPLIES " +
-                "where APPLY_USER=?";
+                "from STUDY_APPLIES a " +
+                "INNER JOIN STUDY_POSTS p " +
+                "ON p.SEQ=a.post_seq " +
+                "where a.APPLY_USER=?";
 
         return jdbcTemplate.query(query, new Object[]{userId.value()}, mapper2);
     }
@@ -138,7 +139,10 @@ public class ApplyRepositoryImpl implements ApplyRepository {
             .seq(rs.getLong("seq"))
             .applyUser(Id.of(User.class, rs.getLong("apply_user")))
             .applyStatus(Id.of(StudyCode.class, rs.getString("apply_status")))
+            .applyPost(new ApplyPost(rs.getString("title"),
+                    Id.of(StudyCode.class, rs.getString("status_seq"))))
             .build();
+
 
     static RowMapper<Apply> mapper3 = (rs, rowNum) -> new Apply.Builder()
             .seq(rs.getLong("seq"))

@@ -14,6 +14,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 /**
  * Created By mand2 on 2020-10-24.
+ * 스터디 지원글
  */
 public class Apply {
     private final Long seq;
@@ -23,17 +24,20 @@ public class Apply {
     private String content;
     private Id<StudyCode, String> applyStatus;
     private LocalDateTime createdAt;
+    private ApplyPost applyPost; // 지원한 모집글
+
 
     public Apply(Long postSeq, Id<User, Long> applyUser, String content) {
-        this(null, postSeq, applyUser, null, content, null, null);
+        this(null, postSeq, applyUser, null, content, null, null, null);
     }
 
     public Apply(Long seq, Long postSeq, Id<User, Long> applyUser,
                  Id<StudyCode, String> applyStatus, LocalDateTime createdAt) {
-        this(seq, postSeq, applyUser, null, null, applyStatus, createdAt);
+        this(seq, postSeq, applyUser, null, null, applyStatus, createdAt, null);
     }
 
-    public Apply(Long seq, Long postSeq, Id<User, Long> applyUser, String userName, String content, Id<StudyCode, String> applyStatus, LocalDateTime createdAt) {
+    public Apply(Long seq, Long postSeq, Id<User, Long> applyUser, String userName, String content,
+                 Id<StudyCode, String> applyStatus, LocalDateTime createdAt, ApplyPost applyPost) {
         this.seq = seq;
         this.postSeq = postSeq;
         this.applyUser = applyUser;
@@ -41,6 +45,7 @@ public class Apply {
         this.content = content;
         this.applyStatus = defaultIfNull(applyStatus, Id.of(StudyCode.class, StatusUtils.WAITING.getCodeSeq()));
         this.createdAt = defaultIfNull(createdAt, now());
+        this.applyPost = applyPost;
     }
 
     public void modify(String content) {
@@ -79,6 +84,10 @@ public class Apply {
         return createdAt;
     }
 
+    public ApplyPost getApplyPost() {
+        return applyPost;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(seq);
@@ -102,6 +111,7 @@ public class Apply {
                 .append("content", content)
                 .append("applyStatus", applyStatus)
                 .append("createdAt", createdAt)
+                .append("applyPost", applyPost)
                 .toString();
     }
 
@@ -113,6 +123,7 @@ public class Apply {
         private String content;
         private Id<StudyCode, String> applyStatus;
         private LocalDateTime createdAt;
+        private ApplyPost applyPost; // 지원한 모집글
 
         public Builder() {
         }
@@ -125,6 +136,7 @@ public class Apply {
             this.content = apply.content;
             this.applyStatus = apply.applyStatus;
             this.createdAt = apply.createdAt;
+            this.applyPost = apply.applyPost;
         }
 
         public Builder seq(Long seq) {
@@ -162,8 +174,14 @@ public class Apply {
             return this;
         }
 
+        public Builder applyPost(ApplyPost applyPost) {
+            this.applyPost = applyPost;
+            return this;
+        }
+
         public Apply build() {
-            return new Apply(seq, postSeq, applyUser, userName, content, applyStatus, createdAt);
+            return new Apply(seq, postSeq, applyUser, userName, content,
+                    applyStatus, createdAt, applyPost);
         }
     }
 
