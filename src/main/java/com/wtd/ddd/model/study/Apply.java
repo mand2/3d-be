@@ -19,23 +19,25 @@ public class Apply {
     private final Long seq;
     private final Long postSeq;
     private final Id<User, Long> applyUser;
+    private final String userName;
     private String content;
     private Id<StudyCode, String> applyStatus;
     private LocalDateTime createdAt;
 
     public Apply(Long postSeq, Id<User, Long> applyUser, String content) {
-        this(null, postSeq, applyUser, content, null, null);
+        this(null, postSeq, applyUser, null, content, null, null);
     }
 
     public Apply(Long seq, Long postSeq, Id<User, Long> applyUser,
                  Id<StudyCode, String> applyStatus, LocalDateTime createdAt) {
-        this(seq, postSeq, applyUser, null, applyStatus, createdAt);
+        this(seq, postSeq, applyUser, null, null, applyStatus, createdAt);
     }
 
-    public Apply(Long seq, Long postSeq, Id<User, Long> applyUser, String content, Id<StudyCode, String> applyStatus, LocalDateTime createdAt) {
+    public Apply(Long seq, Long postSeq, Id<User, Long> applyUser, String userName, String content, Id<StudyCode, String> applyStatus, LocalDateTime createdAt) {
         this.seq = seq;
         this.postSeq = postSeq;
         this.applyUser = applyUser;
+        this.userName = userName;
         this.content = content;
         this.applyStatus = defaultIfNull(applyStatus, Id.of(StudyCode.class, StatusUtils.WAITING.getCodeSeq()));
         this.createdAt = defaultIfNull(createdAt, now());
@@ -59,6 +61,10 @@ public class Apply {
 
     public Id<User, Long> getApplyUser() {
         return applyUser;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public String getContent() {
@@ -92,6 +98,7 @@ public class Apply {
                 .append("seq", seq)
                 .append("postSeq", postSeq)
                 .append("applyUser", applyUser)
+                .append("userName", userName)
                 .append("content", content)
                 .append("applyStatus", applyStatus)
                 .append("createdAt", createdAt)
@@ -102,6 +109,7 @@ public class Apply {
         private Long seq;
         private Long postSeq;
         private Id<User, Long> applyUser;
+        private String userName;
         private String content;
         private Id<StudyCode, String> applyStatus;
         private LocalDateTime createdAt;
@@ -113,6 +121,7 @@ public class Apply {
             this.seq = apply.seq;
             this.postSeq = apply.postSeq;
             this.applyUser = apply.applyUser;
+            this.userName = apply.userName;
             this.content = apply.content;
             this.applyStatus = apply.applyStatus;
             this.createdAt = apply.createdAt;
@@ -133,6 +142,11 @@ public class Apply {
             return this;
         }
 
+        public Builder userName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
         public Builder content(String content) {
             this.content = content;
             return this;
@@ -149,7 +163,7 @@ public class Apply {
         }
 
         public Apply build() {
-            return new Apply(seq, postSeq, applyUser, content, applyStatus, createdAt);
+            return new Apply(seq, postSeq, applyUser, userName, content, applyStatus, createdAt);
         }
     }
 

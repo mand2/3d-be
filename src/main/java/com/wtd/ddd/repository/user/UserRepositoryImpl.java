@@ -64,6 +64,22 @@ public class UserRepositoryImpl implements UserRepository {
         return Optional.ofNullable(results.isEmpty()?null:results.get(0));
     }
 
+    @Override
+    public Boolean findByUserID(Id<User, Long> userId) {
+        // 유저존재하는지 검색 -> 없으면 false, 있으면 true.
+        String query = "SELECT " +
+                " seq, " +
+                " user_id, " +
+                " email, " +
+                " name, " +
+                " created_at " +
+                "FROM USERS " +
+                "WHERE USER_ID=?";
+
+        List<User> results = jdbcTemplate.query(query, new Object[]{userId.value()}, mapper);
+        return !results.isEmpty();
+    }
+
     static RowMapper<User> mapper = (rs, rowNum) -> new User.Builder()
             .seq(rs.getLong("seq"))
             .userId(rs.getLong("user_id"))

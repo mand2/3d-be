@@ -82,10 +82,13 @@ public class ApplyRepositoryImpl implements ApplyRepository {
     @Override
     public List<Apply> findByPostId(Id<Post, Long> postId) {
         String query = "SELECT " +
-                "    SEQ as seq, " +
-                "    APPLY_USER as apply_user, " +
-                "    APPLY_STATUS as apply_status " +
-                "from STUDY_APPLIES " +
+                "    a.SEQ as seq, " +
+                "    a.APPLY_USER as apply_user, " +
+                "    a.APPLY_STATUS as apply_status, " +
+                "    u.NAME as user_name " +
+                "from STUDY_APPLIES a " +
+                "INNER JOIN USERS u " +
+                "ON u.SEQ = a.APPLY_USER " +
                 "where post_seq=?";
 
         return jdbcTemplate.query(query, new Object[]{postId.value()}, mapper2);
@@ -134,6 +137,7 @@ public class ApplyRepositoryImpl implements ApplyRepository {
             .seq(rs.getLong("seq"))
             .applyUser(Id.of(User.class, rs.getLong("apply_user")))
             .applyStatus(Id.of(StudyCode.class, rs.getString("apply_status")))
+            .userName(rs.getString("user_name"))
             .build();
 
 

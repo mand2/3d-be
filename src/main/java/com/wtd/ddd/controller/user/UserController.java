@@ -32,6 +32,12 @@ public class UserController {
         this.studyService = studyService;
     }
 
+    //존재여부 > github user_id 체크
+    @PostMapping("/exists")
+    public ApiResult<Boolean> exist(@RequestBody UserJoinRequest joinRequest) {
+        return OK(userService.findExist(Id.of(User.class, joinRequest.getUserId())));
+    }
+
     //가입
     @PostMapping("/join")
     public ApiResult<Long> joining(@RequestBody UserJoinRequest joinRequest) {

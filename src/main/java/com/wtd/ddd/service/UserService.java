@@ -27,9 +27,16 @@ public class UserService {
         return userRepository.save(user).getSeq();
     }
 
+    //내정보보기 users.seq
     @Transactional(readOnly = true)
     public User myInfo(Id<User, Long> userId) {
         return userRepository.findById(userId)
                 .orElseThrow( ()-> new NotFoundException(User.class, User.class,Id.of(User.class, userId)));
+    }
+
+    //유저가입여부 users.user_id > 있으면 true
+    @Transactional(readOnly = true)
+    public Boolean findExist(Id<User, Long> userId) {
+        return userRepository.findByUserID(userId);
     }
 }

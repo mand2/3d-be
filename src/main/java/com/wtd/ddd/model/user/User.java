@@ -27,10 +27,6 @@ public class User {
         this(null, userId, name, email, null, null, 0, false);
     }
 
-//    public User(Long userId, String name, Email email, LocalDateTime createdAt) {
-//        this(null, userId, name, email, createdAt, null, 0, false);
-//    }
-
     public User(Long seq, Long userId, String name, Email email,
                 LocalDateTime createdAt, LocalDateTime lastLoginAt, int loginCount, boolean deleteFlag) {
         this.seq = seq;

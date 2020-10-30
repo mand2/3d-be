@@ -14,4 +14,6 @@ public interface UserRepository {
 
     Optional<User> findById(Id<User, Long> userId);
 
+    Boolean findByUserID(Id<User, Long> userId);
+
 }
