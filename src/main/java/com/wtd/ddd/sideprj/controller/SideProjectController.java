@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 @Slf4j
-@RequestMapping("/api/sideprj")
+@RequestMapping(value="/api/sideprj", produces="application/text;charset=utf8")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SideProjectController {
 

@@ -17,4 +17,9 @@ INSERT INTO SIDE_PROJECT_POST(leader, meeting, location,
                               status, mem_total_capa,
                               title, contents, create_dt) VALUES
 ('plzrun', 'OFFLINE', '제주도',
+ '모집중', 5, '운동 좀 하라고 쪼는 어플 만들기', '같이 만들어요~', sysdate);
+INSERT INTO SIDE_PROJECT_POST(leader, meeting, location,
+                              status, mem_total_capa,
+                              title, contents, create_dt) VALUES
+('catcatcat', 'OFFLINE', '부산 해운대구',
  '모집중', 5, '이 어플 사용자 0순위가 저입니다ㅠㅠ 운동 좀 하라고 쪼는 어플 만들기', '같이 만들어요~', sysdate);
