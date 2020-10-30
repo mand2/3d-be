@@ -2,6 +2,7 @@ package com.wtd.ddd.service;
 
 import com.wtd.ddd.domain.SideProjectApply;
 import com.wtd.ddd.repository.sideprj.SideProjectApplyDAO;
+import com.wtd.ddd.util.SideProjectValidator;
 import com.wtd.ddd.web.SideProjectApplyRequest;
 import com.wtd.ddd.web.SideProjectPostRequest;
 import com.wtd.ddd.web.SideProjectPostResponse;
@@ -32,12 +33,12 @@ public class SideProjectService {
 
     public String writePost(SideProjectPostRequest request) {
         // TODO : 인원수 validation, 코드 정리
-        log.error("INPUT:" + request.toString());
         SideProjectPost post = SideProjectPostRequest.convertToPost(request);
+        if (!SideProjectValidator.isValidCapacity(request)) return "인원수가 맞지 않습니다!";
         int key = sideProjectPostDAO.insert(post);
         List<SideProjectRecArea> areas = SideProjectPostRequest.convertToRecArea(request, key);
         addRecAreas(areas);
-        return "SUCCESS";
+        return "등록 성공!";
     }
 
     public SideProjectPostResponse get(int seq) {
