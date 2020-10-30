@@ -1,4 +1,4 @@
-package com.wtd.ddd.sideprj.web;
+package com.wtd.ddd.web;
 
 import lombok.Data;
 

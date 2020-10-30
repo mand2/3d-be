@@ -1,14 +1,16 @@
-package com.wtd.ddd.sideprj.service;
+package com.wtd.ddd.service;
 
-import com.wtd.ddd.sideprj.domain.SideProjectApply;
-import com.wtd.ddd.sideprj.repository.SideProjectApplyDAO;
-import com.wtd.ddd.sideprj.web.SideProjectApplyRequest;
-import com.wtd.ddd.sideprj.web.SideProjectPostRequest;
-import com.wtd.ddd.sideprj.web.SideProjectPostResponse;
-import com.wtd.ddd.sideprj.domain.SideProjectPost;
-import com.wtd.ddd.sideprj.domain.SideProjectRecArea;
-import com.wtd.ddd.sideprj.repository.SideProjectPostDAO;
-import com.wtd.ddd.sideprj.repository.SideProjectRecAreaDAO;
+import com.wtd.ddd.domain.Mail;
+import com.wtd.ddd.domain.SideProjectApply;
+import com.wtd.ddd.repository.sideprj.SideProjectApplyDAO;
+import com.wtd.ddd.util.SideProjectValidator;
+import com.wtd.ddd.web.SideProjectApplyRequest;
+import com.wtd.ddd.web.SideProjectPostRequest;
+import com.wtd.ddd.web.SideProjectPostResponse;
+import com.wtd.ddd.domain.SideProjectPost;
+import com.wtd.ddd.domain.SideProjectRecArea;
+import com.wtd.ddd.repository.sideprj.SideProjectPostDAO;
+import com.wtd.ddd.repository.sideprj.SideProjectRecAreaDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,24 +22,31 @@ import java.util.List;
 @Slf4j
 public class SideProjectService {
 
-    @Autowired
-    SideProjectRecAreaDAO sideProjectRecAreaDAO;
+    private final SideProjectRecAreaDAO sideProjectRecAreaDAO;
+    private final SideProjectPostDAO sideProjectPostDAO;
+    private final SideProjectApplyDAO sideProjectApplyDAO;
+    private final MailService mailService;
 
-    @Autowired
-    SideProjectPostDAO sideProjectPostDAO;
-
-    @Autowired
-    SideProjectApplyDAO sideProjectApplyDAO;
+    public SideProjectService(SideProjectRecAreaDAO sideProjectRecAreaDAO,
+                              SideProjectPostDAO sideProjectPostDAO,
+                              SideProjectApplyDAO sideProjectApplyDAO,
+                              MailService mailService) {
+        this.sideProjectRecAreaDAO = sideProjectRecAreaDAO;
+        this.sideProjectPostDAO = sideProjectPostDAO;
+        this.sideProjectApplyDAO = sideProjectApplyDAO;
+        this.mailService = mailService;
+    }
 
 
     public String writePost(SideProjectPostRequest request) {
-        // TODO : 인원수 validation, 코드 정리
-        log.error("INPUT:" + request.toString());
         SideProjectPost post = SideProjectPostRequest.convertToPost(request);
+        if (!SideProjectValidator.isValidCapacity(request)) return "인원수가 맞지 않습니다!";
         int key = sideProjectPostDAO.insert(post);
         List<SideProjectRecArea> areas = SideProjectPostRequest.convertToRecArea(request, key);
         addRecAreas(areas);
-        return "SUCCESS";
+        mailService.sendMail("mirijo02233092@gmail.com ","[3D] 프로젝트가 새로 등록되었습니다!",
+                Mail.convertToMailContent(post)); // 테스트를 위한 하드코딩
+        return "등록 성공!";
     }
 
     public SideProjectPostResponse get(int seq) {
@@ -50,7 +59,6 @@ public class SideProjectService {
     public boolean changeApplyStatus(SideProjectApply apply) {
         int seq = apply.getSeq();
         int recSeq = apply.getRecAreaSeq();
-        log.error("seq = " + seq + " , " + " recSeq = " + recSeq);
         sideProjectApplyDAO.update(apply);
         if ("Accept".equals(apply.getApplyStat())) {
             sideProjectRecAreaDAO.updateCapacity(recSeq);

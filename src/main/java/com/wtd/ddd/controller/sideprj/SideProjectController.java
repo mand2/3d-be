@@ -1,17 +1,14 @@
-package com.wtd.ddd.sideprj.controller;
+package com.wtd.ddd.controller.sideprj;
 
 import com.google.gson.Gson;
-import com.wtd.ddd.Application;
-import com.wtd.ddd.sideprj.domain.SideProjectApply;
-import com.wtd.ddd.sideprj.domain.SideProjectRecArea;
-import com.wtd.ddd.sideprj.repository.SideProjectApplyDAO;
-import com.wtd.ddd.sideprj.repository.SideProjectPostDAO;
-import com.wtd.ddd.sideprj.domain.SideProjectPost;
-import com.wtd.ddd.sideprj.repository.SideProjectRecAreaDAO;
-import com.wtd.ddd.sideprj.service.SideProjectService;
-import com.wtd.ddd.sideprj.web.*;
+import com.wtd.ddd.domain.SideProjectApply;
+import com.wtd.ddd.repository.sideprj.SideProjectApplyDAO;
+import com.wtd.ddd.repository.sideprj.SideProjectPostDAO;
+import com.wtd.ddd.domain.SideProjectPost;
+import com.wtd.ddd.repository.sideprj.SideProjectRecAreaDAO;
+import com.wtd.ddd.service.SideProjectService;
+import com.wtd.ddd.web.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,27 +16,28 @@ import java.util.List;
 
 @Controller
 @Slf4j
-@RequestMapping("/api/sideprj")
+@RequestMapping(value="/api/sideprj", produces="application/text;charset=utf8")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SideProjectController {
 
-    @Autowired
-    private SideProjectPostDAO sideProjectPostDAO;
+    private final SideProjectPostDAO sideProjectPostDAO;
+    private final SideProjectRecAreaDAO sideProjectRecAreaDAO;
+    private final SideProjectApplyDAO sideProjectApplyDAO;
+    private final SideProjectService sideProjectService;
 
-    @Autowired
-    private SideProjectRecAreaDAO sideProjectRecAreaDAO;
-
-    @Autowired
-    private SideProjectApplyDAO sideProjectApplyDAO;
-
-    @Autowired
-    private SideProjectService sideProjectService;
+    public SideProjectController(SideProjectPostDAO sideProjectPostDAO, SideProjectRecAreaDAO sideProjectRecAreaDAO,
+                                 SideProjectApplyDAO sideProjectApplyDAO, SideProjectService sideProjectService) {
+        this.sideProjectService = sideProjectService;
+        this.sideProjectApplyDAO = sideProjectApplyDAO;
+        this.sideProjectRecAreaDAO = sideProjectRecAreaDAO;
+        this.sideProjectPostDAO = sideProjectPostDAO;
+    }
 
     @PostMapping("/post")
     @ResponseBody
     public String addPost(@RequestBody SideProjectPostRequest request) {
-        log.error("Request:" + request.toString());
-        sideProjectService.writePost(request);
-        return "등록 성공!";
+        log.info("Request:" + request.toString());
+        return sideProjectService.writePost(request);
     }
 
      @GetMapping("/posts/{seq}")
@@ -109,12 +107,10 @@ public class SideProjectController {
         return "취소되었습니다";
     }
 
-
-    @GetMapping("/recs/")
-    @ResponseBody
-    public String get() {
-        List<SideProjectRecArea> areas = sideProjectRecAreaDAO.select();
-        return new Gson().toJson(areas);
+    @ExceptionHandler(Exception.class)
+    public String exceptionHandler(Exception e) {
+        e.printStackTrace();
+        return "서비스 처리 도중 오류가 발생했습니다.";
     }
 
 }
