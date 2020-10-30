@@ -1,5 +1,6 @@
 package com.wtd.ddd.repository.user;
 
+import com.wtd.ddd.controller.user.UserExistResponse;
 import com.wtd.ddd.model.commons.Id;
 import com.wtd.ddd.model.user.Email;
 import com.wtd.ddd.model.user.User;
@@ -62,6 +63,25 @@ public class UserRepositoryImpl implements UserRepository {
 
         List<User> results = jdbcTemplate.query(query, new Object[]{userId.value()}, mapper);
         return Optional.ofNullable(results.isEmpty()?null:results.get(0));
+    }
+
+    @Override
+    public UserExistResponse findByUserID(Id<User, Long> userId) {
+        // 유저존재하는지 검색 -> 없으면 false, 있으면 true.
+        String query = "SELECT " +
+                " seq, " +
+                " user_id, " +
+                " email, " +
+                " name, " +
+                " created_at " +
+                "FROM USERS " +
+                "WHERE USER_ID=?";
+
+        List<User> results = jdbcTemplate.query(query, new Object[]{userId.value()}, mapper);
+
+        return results.isEmpty()
+                ? new UserExistResponse(false)
+                : new UserExistResponse(true, results.get(0));
     }
 
     static RowMapper<User> mapper = (rs, rowNum) -> new User.Builder()

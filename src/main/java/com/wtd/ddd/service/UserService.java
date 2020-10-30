@@ -1,5 +1,6 @@
 package com.wtd.ddd.service;
 
+import com.wtd.ddd.controller.user.UserExistResponse;
 import com.wtd.ddd.error.NotFoundException;
 import com.wtd.ddd.model.commons.Id;
 import com.wtd.ddd.model.user.User;
@@ -27,9 +28,16 @@ public class UserService {
         return userRepository.save(user).getSeq();
     }
 
+    //내정보보기 users.seq
     @Transactional(readOnly = true)
     public User myInfo(Id<User, Long> userId) {
         return userRepository.findById(userId)
                 .orElseThrow( ()-> new NotFoundException(User.class, User.class,Id.of(User.class, userId)));
+    }
+
+    //유저가입여부 users.user_id > 있으면 true
+    @Transactional(readOnly = true)
+    public UserExistResponse findExist(Id<User, Long> userId) {
+        return userRepository.findByUserID(userId);
     }
 }
