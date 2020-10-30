@@ -72,6 +72,7 @@ public class ApplyRepositoryImpl implements ApplyRepository {
                 "    SEQ as seq, " +
                 "    APPLY_USER as apply_user, " +
                 "    APPLY_STATUS as apply_status " +
+
                 "from STUDY_APPLIES " +
                 "where APPLY_USER=?";
 
@@ -91,7 +92,7 @@ public class ApplyRepositoryImpl implements ApplyRepository {
                 "ON u.SEQ = a.APPLY_USER " +
                 "where post_seq=?";
 
-        return jdbcTemplate.query(query, new Object[]{postId.value()}, mapper2);
+        return jdbcTemplate.query(query, new Object[]{postId.value()}, mapper3);
     }
 
     // 해당 지원글 보기
@@ -134,6 +135,12 @@ public class ApplyRepositoryImpl implements ApplyRepository {
             .build();
 
     static RowMapper<Apply> mapper2 = (rs, rowNum) -> new Apply.Builder()
+            .seq(rs.getLong("seq"))
+            .applyUser(Id.of(User.class, rs.getLong("apply_user")))
+            .applyStatus(Id.of(StudyCode.class, rs.getString("apply_status")))
+            .build();
+
+    static RowMapper<Apply> mapper3 = (rs, rowNum) -> new Apply.Builder()
             .seq(rs.getLong("seq"))
             .applyUser(Id.of(User.class, rs.getLong("apply_user")))
             .applyStatus(Id.of(StudyCode.class, rs.getString("apply_status")))
