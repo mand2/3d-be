@@ -20,6 +20,7 @@ import java.util.List;
 @Controller
 @Slf4j
 @RequestMapping("/api/sideprj")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SideProjectController {
 
     @Autowired
@@ -37,7 +38,7 @@ public class SideProjectController {
     @PostMapping("/post")
     @ResponseBody
     public String addPost(@RequestBody SideProjectPostRequest request) {
-        log.error("Request:" + request.toString());
+        log.info("Request:" + request.toString());
         sideProjectService.writePost(request);
         return "등록 성공!";
     }

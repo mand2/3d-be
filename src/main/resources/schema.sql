@@ -8,7 +8,7 @@ CREATE TABLE SIDE_PROJECT_POST (
    mem_capa INT DEFAULT 0,
    mem_total_capa INT NOT NULL,
    title VARCHAR(50) NOT NULL,
-   contents VARCHAR(20) NOT NULL,
+   contents VARCHAR(500) NOT NULL,
    delete_yn VARCHAR(2) DEFAULT 'N' NOT NULL,
    create_dt DATE DEFAULT SYSDATE
 );
