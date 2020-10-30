@@ -1,15 +1,14 @@
-package com.wtd.ddd.sideprj.controller;
+package com.wtd.ddd.controller.sideprj;
 
 import com.google.gson.Gson;
-import com.wtd.ddd.Application;
-import com.wtd.ddd.sideprj.domain.SideProjectApply;
-import com.wtd.ddd.sideprj.domain.SideProjectRecArea;
-import com.wtd.ddd.sideprj.repository.SideProjectApplyDAO;
-import com.wtd.ddd.sideprj.repository.SideProjectPostDAO;
-import com.wtd.ddd.sideprj.domain.SideProjectPost;
-import com.wtd.ddd.sideprj.repository.SideProjectRecAreaDAO;
-import com.wtd.ddd.sideprj.service.SideProjectService;
-import com.wtd.ddd.sideprj.web.*;
+import com.wtd.ddd.domain.SideProjectApply;
+import com.wtd.ddd.domain.SideProjectRecArea;
+import com.wtd.ddd.repository.sideprj.SideProjectApplyDAO;
+import com.wtd.ddd.repository.sideprj.SideProjectPostDAO;
+import com.wtd.ddd.domain.SideProjectPost;
+import com.wtd.ddd.repository.sideprj.SideProjectRecAreaDAO;
+import com.wtd.ddd.service.SideProjectService;
+import com.wtd.ddd.web.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

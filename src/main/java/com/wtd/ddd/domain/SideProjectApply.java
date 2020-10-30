@@ -1,8 +1,7 @@
-package com.wtd.ddd.sideprj.domain;
+package com.wtd.ddd.domain;
 
-import com.wtd.ddd.Application;
-import com.wtd.ddd.sideprj.web.SideProjectApplyRequest;
-import com.wtd.ddd.sideprj.web.SideProjectStatusChangeRequest;
+import com.wtd.ddd.web.SideProjectApplyRequest;
+import com.wtd.ddd.web.SideProjectStatusChangeRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

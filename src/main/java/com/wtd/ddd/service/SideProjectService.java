@@ -1,14 +1,14 @@
-package com.wtd.ddd.sideprj.service;
+package com.wtd.ddd.service;
 
-import com.wtd.ddd.sideprj.domain.SideProjectApply;
-import com.wtd.ddd.sideprj.repository.SideProjectApplyDAO;
-import com.wtd.ddd.sideprj.web.SideProjectApplyRequest;
-import com.wtd.ddd.sideprj.web.SideProjectPostRequest;
-import com.wtd.ddd.sideprj.web.SideProjectPostResponse;
-import com.wtd.ddd.sideprj.domain.SideProjectPost;
-import com.wtd.ddd.sideprj.domain.SideProjectRecArea;
-import com.wtd.ddd.sideprj.repository.SideProjectPostDAO;
-import com.wtd.ddd.sideprj.repository.SideProjectRecAreaDAO;
+import com.wtd.ddd.domain.SideProjectApply;
+import com.wtd.ddd.repository.sideprj.SideProjectApplyDAO;
+import com.wtd.ddd.web.SideProjectApplyRequest;
+import com.wtd.ddd.web.SideProjectPostRequest;
+import com.wtd.ddd.web.SideProjectPostResponse;
+import com.wtd.ddd.domain.SideProjectPost;
+import com.wtd.ddd.domain.SideProjectRecArea;
+import com.wtd.ddd.repository.sideprj.SideProjectPostDAO;
+import com.wtd.ddd.repository.sideprj.SideProjectRecAreaDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

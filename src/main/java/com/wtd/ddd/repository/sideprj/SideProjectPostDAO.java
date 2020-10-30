@@ -1,7 +1,6 @@
-package com.wtd.ddd.sideprj.repository;
+package com.wtd.ddd.repository.sideprj;
 
-import com.wtd.ddd.sideprj.web.SideProjectMyApplyResponse;
-import com.wtd.ddd.sideprj.domain.SideProjectPost;
+import com.wtd.ddd.domain.SideProjectPost;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
