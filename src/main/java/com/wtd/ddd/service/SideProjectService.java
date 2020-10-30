@@ -44,7 +44,7 @@ public class SideProjectService {
         int key = sideProjectPostDAO.insert(post);
         List<SideProjectRecArea> areas = SideProjectPostRequest.convertToRecArea(request, key);
         addRecAreas(areas);
-        mailService.sendMail("dulcishortus@gmail.com ","[3D] 프로젝트가 새로 등록되었습니다!",
+        mailService.sendMail("decaffeine12@gmail.com ","[3D] 프로젝트가 새로 등록되었습니다!",
                 Mail.convertToMailContent(post)); // 테스트를 위한 하드코딩
         return "등록 성공!";
     }
