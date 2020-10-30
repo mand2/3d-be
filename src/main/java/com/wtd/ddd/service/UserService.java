@@ -1,5 +1,6 @@
 package com.wtd.ddd.service;
 
+import com.wtd.ddd.controller.user.UserExistResponse;
 import com.wtd.ddd.error.NotFoundException;
 import com.wtd.ddd.model.commons.Id;
 import com.wtd.ddd.model.user.User;
@@ -36,7 +37,7 @@ public class UserService {
 
     //유저가입여부 users.user_id > 있으면 true
     @Transactional(readOnly = true)
-    public Boolean findExist(Id<User, Long> userId) {
+    public UserExistResponse findExist(Id<User, Long> userId) {
         return userRepository.findByUserID(userId);
     }
 }

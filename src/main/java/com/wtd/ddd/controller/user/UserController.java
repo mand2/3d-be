@@ -34,7 +34,7 @@ public class UserController {
 
     //존재여부 > github user_id 체크
     @PostMapping("/exists")
-    public ApiResult<Boolean> exist(@RequestBody UserJoinRequest joinRequest) {
+    public ApiResult<UserExistResponse> exist(@RequestBody UserJoinRequest joinRequest) {
         return OK(userService.findExist(Id.of(User.class, joinRequest.getUserId())));
     }
 
