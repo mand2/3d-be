@@ -15,6 +15,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
  */
 public class User {
     private final Long seq;
+    private final Long userId; // 깃헙 oauth 용 id. 숫자로 들어옴.
     private String name; //github nickname. => 고칠 수 있다.
     private Email email; //github email. => 고칠 수 있다.
     private LocalDateTime createdAt;
@@ -22,15 +23,21 @@ public class User {
     private int loginCount;
     private boolean deleteFlag;
 
-    public User(String name, Email email) {
-        this(null, name, email, null, null, 0, false);
+    public User(Long userId, String name, Email email) {
+        this(null, userId, name, email, null, null, 0, false);
     }
 
-    public User(Long seq, String name, Email email, LocalDateTime createdAt, LocalDateTime lastLoginAt, int loginCount, boolean deleteFlag) {
+//    public User(Long userId, String name, Email email, LocalDateTime createdAt) {
+//        this(null, userId, name, email, createdAt, null, 0, false);
+//    }
+
+    public User(Long seq, Long userId, String name, Email email,
+                LocalDateTime createdAt, LocalDateTime lastLoginAt, int loginCount, boolean deleteFlag) {
         this.seq = seq;
+        this.userId = userId;
         this.name = name;
         this.email = email;
-        this.createdAt = defaultIfNull(createdAt, now());
+        this.createdAt = defaultIfNull(createdAt, now());;
         this.lastLoginAt = lastLoginAt;
         this.loginCount = loginCount;
         this.deleteFlag = deleteFlag;
@@ -38,6 +45,10 @@ public class User {
 
     public Long getSeq() {
         return seq;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public String getName() {
@@ -81,6 +92,7 @@ public class User {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("seq", seq)
+                .append("userId", userId)
                 .append("name", name)
                 .append("email", email)
                 .append("createdAt", createdAt)
@@ -92,6 +104,7 @@ public class User {
 
     static public class Builder {
         private Long seq;
+        private Long userId; // 깃헙 oauth 용 id. 숫자로 들어옴.
         private String name;
         private Email email;
         private LocalDateTime createdAt;
@@ -104,6 +117,7 @@ public class User {
 
         public Builder(User user) {
             this.seq = user.seq;
+            this.userId = user.userId;
             this.name = user.name;
             this.email = user.email;
             this.createdAt = user.createdAt;
@@ -116,6 +130,12 @@ public class User {
             this.seq = seq;
             return this;
         }
+
+        public Builder userId(Long userId) {
+            this.userId = userId;
+            return this;
+        }
+
         public Builder name(String name) {
             this.name = name;
             return this;
@@ -142,7 +162,7 @@ public class User {
         }
 
         public User build() {
-            return new User(seq, name, email, createdAt, lastLoginAt, loginCount, deleteFlag);
+            return new User(seq, userId, name, email, createdAt, lastLoginAt, loginCount, deleteFlag);
         }
     }
 }

@@ -65,7 +65,7 @@ public class ApplyRepositoryImpl implements ApplyRepository {
     }
 
     //empty list 가능성 있음.
-    //나의 지원한 스터디 리스트 보기
+    //나의 지원한 지원글 리스트 보기
     @Override
     public List<Apply> findAll(Id<User, Long> userId) {
         String query = "SELECT " +

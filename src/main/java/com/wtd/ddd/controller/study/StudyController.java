@@ -78,4 +78,5 @@ public class StudyController {
                 Id.of(Apply.class, applySeq),
                 Id.of(StudyCode.class, postRequest.getApplyStatus())));
     }
+
 }

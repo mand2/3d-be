@@ -1,7 +1,7 @@
 CREATE TABLE USERS
 (
     seq           bigint      NOT NULL AUTO_INCREMENT,
-    user_id       varchar(50) NOT NULL,
+    user_id       bigint      NOT NULL,
     email         varchar(50) NOT NULL,
     name          varchar(50) NOT NULL,
     created_at    datetime    NULL     DEFAULT CURRENT_TIMESTAMP(),

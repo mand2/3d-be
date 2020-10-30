@@ -1,0 +1,7 @@
+server:
+  port: 8443
+  ssl:
+    key-store: keystore.p12
+    key-store-password: 3dddadmin
+    keyStoreType: PKCS12
+    keyAlias: bns-ssl

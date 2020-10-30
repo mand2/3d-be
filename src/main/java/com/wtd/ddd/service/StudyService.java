@@ -140,7 +140,7 @@ public class StudyService {
     // 지원 거절 혹은 취소
     private void denyOrCancel(Id<StudyCode, String> applyStatus, Apply apply) {
         if (StatusUtils.DENIED.getCodeSeq().equals(applyStatus.value())
-            || StatusUtils.CANCEL.getCodeSeq().equals(applyStatus.value())) {
+                || StatusUtils.CANCEL.getCodeSeq().equals(applyStatus.value())) {
             apply.modify(applyStatus); //바꿔야할 상태값으로 변경
             applyRepository.update(apply);
         }
@@ -168,4 +168,22 @@ public class StudyService {
         checkNotNull(userId, "userId must be provided");
         return applyRepository.findAll(userId);
     }
+
+    //내가 작성한 모집글만 보기(작성자기준) > 리스트+total.
+    @Transactional(readOnly = true)
+    public StudyPostResponse posts(Id<User, Long>userId, Long offset, int limit) {
+        List<Post> postList = postRepository.findAllByUserId(userId, offset, limit);
+        int totalCount = postList.size();
+
+        return new StudyPostResponse(postList, totalCount);
+    }
+
+    //스터디지원자 -> 내가 지원한 스터디모집글 리스트+total보기
+    @Transactional(readOnly = true)
+    public StudyPostResponse appliedPosts(Id<User, Long> userId, Long offset, int limit) {
+        List<Post> postList = postRepository.findAllByApplierId(userId, offset, limit);
+        int totalCount = postList.size();
+        return new StudyPostResponse(postList, totalCount);
+    }
+
 }
