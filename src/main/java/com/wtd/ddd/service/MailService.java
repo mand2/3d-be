@@ -19,7 +19,7 @@ public class MailService {
     private static final String FROMNAME = "3D";
 
     private static final String SMTP_USERNAME = "3ddd.developers@gmail.com";
-    private static final String SMTP_PASSWORD = "3ddd_admin";
+    private static final String SMTP_PASSWORD = "MAIL_PASSWORD";
 
     private static final String HOST = "smtp.gmail.com";
     private static final int PORT = 25;
